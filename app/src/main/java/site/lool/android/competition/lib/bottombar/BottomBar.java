@@ -123,7 +123,9 @@ public class BottomBar extends View {
             try {
                 Fragment fragment = (Fragment) clx.newInstance();
                 fragmentList.add(fragment);
-            } catch (InstantiationException | IllegalAccessException e) {
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
                 e.printStackTrace();
             }
         }

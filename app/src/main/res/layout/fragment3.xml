@@ -6,14 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="160dp"
-        android:layout_marginTop="196dp"
-        android:text="3"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginLeft="160dp" />
+    <WebView
+        android:id="@+id/webView_fragment3"
+        android:layout_width="match_parent"
+        android:layout_height="515dp"></WebView>
 </android.support.constraint.ConstraintLayout>

@@ -86,21 +86,22 @@ public class WelcomeActivity extends AppCompatActivity {
 
         mVisible = true;
 
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
         Timer timer = new Timer();
         TimerTask task = new TimerTask() {
             @Override
             public void run() {
                 startActivity(new Intent(WelcomeActivity.this,MainActivity.class));
                 overridePendingTransition(android.R.anim.fade_in,android.R.anim.fade_out);
+                finish();
             }
         };
         timer.schedule(task, 2500);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
 
     }
 

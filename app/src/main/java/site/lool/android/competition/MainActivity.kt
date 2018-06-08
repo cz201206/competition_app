@@ -7,6 +7,11 @@ import site.lool.android.competition.lib.bottombar.BottomBar
 import site.lool.android.competition.lib.bottombar.fragment.Fragment1
 import site.lool.android.competition.lib.bottombar.fragment.Fragment2
 import site.lool.android.competition.lib.bottombar.fragment.Fragment3
+import android.webkit.WebSettings
+import android.webkit.WebView
+import android.webkit.WebViewClient
+
+
 
 
 class MainActivity : AppCompatActivity() {
@@ -32,6 +37,8 @@ class MainActivity : AppCompatActivity() {
                         R.drawable.item3_before,
                         R.drawable.item3_after)
                 .build()
+
+
         // Example of a call to a native method
         //sample_text.text = stringFromJNI()
     }
