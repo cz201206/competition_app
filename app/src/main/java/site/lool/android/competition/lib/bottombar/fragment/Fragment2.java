@@ -11,6 +11,7 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import site.lool.android.competition.R;
+import site.lool.android.competition.forjs.Home;
 
 
 public class Fragment2 extends Fragment {
@@ -32,6 +33,8 @@ public class Fragment2 extends Fragment {
         });
         WebSettings settings = webVeiw.getSettings();
         settings.setJavaScriptEnabled(true);//启用js
+        //向DOM传递接口对象
+        webVeiw.addJavascriptInterface(new Home(getContext()),"Android");
         //载入
         webVeiw.loadUrl(url);
 

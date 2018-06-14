@@ -1,24 +1,19 @@
 package site.lool.android.competition.activity;
 
-import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
-import android.view.MenuItem;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
 import site.lool.android.competition.R;
-import site.lool.android.competition.forjs.Home;
 
-public class CaseHistoryActivity extends AppCompatActivity {
+public class SpecialOffersActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_case_history);
-       
+        setContentView(R.layout.activity_special_offers);
 
         //获取前一个activity 提供的路径
         String host = this.getString(R.string.host);
@@ -40,15 +35,4 @@ public class CaseHistoryActivity extends AppCompatActivity {
         //载入
         webView.loadUrl(url);
     }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.finish(); // back button
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
 }

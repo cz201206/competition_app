@@ -1,12 +1,17 @@
 <resources>
-    <string name="app_name">健康信息管理</string>
+    <string name="app_name">安康生态</string>
 
     <string name="title_activity_welcome">WelcomeActivity</string>
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
-    <string name="host">http://10.233.20.203:8079/henghost/public_html</string>
+    <string name="host">http://lool.site</string>
+    <!--<string name="host">http://10.233.20.203:8079/henghost/public_html</string>-->
 
     <!--路径_病历-->
     <string name="path_caseHistroy">/competition/view/home/caseHistory.php</string>
+    <!--路径_科普文章-->
+    <string name="article">/competition/view/home/article.php</string>
+    <!--路径_促销活动-->
+    <string name="specialOffers">/competition/view/specialOffers/specialOffers1.php</string>
 </resources>
