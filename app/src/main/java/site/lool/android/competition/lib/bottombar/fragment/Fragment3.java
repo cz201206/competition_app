@@ -21,7 +21,7 @@ public class Fragment3 extends Fragment {
         View view = LayoutInflater.from(getActivity()).inflate(R.layout.fragment1, container, false);
 
         WebView webVeiw =(WebView)view.findViewById(R.id.webView_fragment1);
-        String url = "http://lool.site/competition/view/mine.php";
+        String url = getString(R.string.host)+"/competition/view/mine.php";
         //设置
         webVeiw.setWebViewClient(new WebViewClient(){//本activity中显示
             @Override
