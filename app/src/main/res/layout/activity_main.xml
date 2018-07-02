@@ -22,5 +22,6 @@
         android:layout_height="46dp"
         android:layout_gravity="bottom"
         android:background="#FFFFFF"
-        android:visibility="visible" />
+        android:visibility="visible"
+        />
 </LinearLayout>
