@@ -10,6 +10,8 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+import java.io.OutputStream;
+
 import site.lool.android.competition.R;
 import site.lool.android.competition.forjs.Home;
 

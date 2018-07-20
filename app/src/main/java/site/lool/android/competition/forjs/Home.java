@@ -5,8 +5,8 @@ import android.content.Intent;
 import android.webkit.JavascriptInterface;
 
 import site.lool.android.competition.R;
-import site.lool.android.competition.activity.CaseHistoryActivity;
-import site.lool.android.competition.activity.WebViewActivity;
+import site.lool.android.competition.activity.level2.CaseHistoryActivity;
+import site.lool.android.competition.activity.level2.WebViewActivity;
 
 public class Home {
     private Context context;
@@ -31,5 +31,6 @@ public class Home {
         Intent intent = new Intent(context,WebViewActivity.class);
         intent.putExtra("path",context.getString(R.string.specialOffers));
         context.startActivity(intent);
+        Intent intent1 = new Intent();
     }
 }

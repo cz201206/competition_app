@@ -19,8 +19,8 @@
             android:label="@string/app_name"
             android:theme="@style/FullscreenTheme" />
         <activity android:name=".activity.ViewpagerActivity" />
-        <activity android:name=".activity.CaseHistoryActivity" />
-        <activity android:name=".activity.WebViewActivity" />
+        <activity android:name=".activity.level2.CaseHistoryActivity" />
+        <activity android:name=".activity.level2.WebViewActivity" />
         <activity android:name=".activity.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -28,7 +28,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.SpecialOffersActivity" />
+        <activity android:name=".activity.level2.SpecialOffersActivity" />
     </application>
 
 </manifest>

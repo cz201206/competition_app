@@ -5,8 +5,9 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
-    <string name="host">http://lool.site</string>
-    <!--<string name="host">http://10.233.20.203:8079/henghost/public_html</string>-->
+    <string name="host">http://10.233.20.203:8079/project/henghost</string>
+    <!--<string name="host">http://lool.site</string>-->
+    <!--<string name="host">http://10.233.20.203:8079/project/henghost</string>-->
 
     <!--路径_病历-->
     <string name="path_caseHistroy">/competition/view/home/caseHistory.php</string>

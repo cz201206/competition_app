@@ -1,12 +1,4 @@
-#include <jni.h>
-#include <string>
+//
+// Created by cz on 2018/7/19.
+//
 
-extern "C" JNIEXPORT jstring
-
-JNICALL
-Java_site_lool_android_competition_MainActivity_stringFromJNI(
-        JNIEnv *env,
-        jobject /* this */) {
-    std::string hello = "Hello from C++";
-    return env->NewStringUTF(hello.c_str());
-}
