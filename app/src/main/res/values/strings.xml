@@ -15,4 +15,7 @@
     <string name="article">/competition/view/home/article.php</string>
     <!--路径_促销活动-->
     <string name="specialOffers">/competition/view/specialOffers/specialOffers1.php</string>
+
+    <!--病历上传到服务器的位置-->
+    <string name="path_caseHistroy_photo">/competition/upload/img</string>
 </resources>
