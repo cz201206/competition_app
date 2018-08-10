@@ -4,21 +4,16 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.level2.CaseHistoryActivity">
-    <WebView
-        android:id="@+id/webView_caseHistroy"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
-        app:layout_constraintStart_toStartOf="@id/toolbar_caseHistroy"
-        app:layout_constraintTop_toTopOf="@+id/toolbar_caseHistroy"></WebView>
+    tools:context=".activity.level3.ImageActivity">
 
     <ImageView
-        android:layout_width="match_parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_imageActivity"
+        android:id="@+id/image_activity"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_caseHistroy"
+        android:id="@+id/toolbar_imageActivity"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -32,29 +27,27 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent">
 
-            <ImageButton
-                android:id="@+id/action_upload"
-                android:layout_width="56dp"
-                android:layout_height="56dp"
-                android:background="@android:color/transparent"
+            <Button
+                android:id="@+id/action_upload_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
                 android:scaleType="fitCenter"
-                app:srcCompat="@drawable/cloud_up_icon"
-                android:onClick="upload"/>
+                android:text="确定"
+                android:onClick="upload_ok"/>
 
 
             <Button
-                android:id="@+id/action_date"
+                android:id="@+id/action_upload_cancel"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
-                android:text="右"
+                android:text="取消"
+                android:onClick="upload_cancel"
                 app:layout_constraintEnd_toEndOf="parent" />
 
         </android.support.constraint.ConstraintLayout>
 
     </android.support.v7.widget.Toolbar>
-
-
 
 </android.support.constraint.ConstraintLayout>
