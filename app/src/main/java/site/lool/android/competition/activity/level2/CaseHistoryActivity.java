@@ -142,13 +142,6 @@ public class CaseHistoryActivity extends AppCompatActivity {
 
     //region 响应区
     public void upload(View view){
-        //上传数据
-        StringBuilder sb = new StringBuilder("");
-        sb.append(this.getString(R.string.host));
-        sb.append(this.getString(R.string.path_caseHistroy_photo));
-        String path_upload = sb.toString();
-        //调试信息
-        Toast.makeText(this,"上传位置："+path_upload,Toast.LENGTH_SHORT).show();
 
         //打开相册上传照片数据
         Uri uri_openAmblum = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
@@ -168,7 +161,6 @@ public class CaseHistoryActivity extends AppCompatActivity {
             String imagePath = c.getString(columnIndex);
             showImage(imagePath);
             c.close();
-            Toast.makeText(this,"图片路径："+imagePath,Toast.LENGTH_SHORT).show();
         }else{
             Toast.makeText(this,"from CaseHistoryActivity:没有图片",Toast.LENGTH_SHORT).show();
         }

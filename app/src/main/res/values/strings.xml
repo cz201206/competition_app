@@ -18,4 +18,5 @@
 
     <!--病历上传到服务器的位置-->
     <string name="path_caseHistroy_photo">/competition/upload/img</string>
+    <string name="receiver_caseHistroy_photo">/competition/util/imageReceiver.php</string>
 </resources>

@@ -6,8 +6,14 @@
     android:layout_height="match_parent"
     tools:context=".activity.level3.ImageActivity">
 
-    <ImageView
+    <EditText
+        android:id="@+id/editText_caseTitle"
         app:layout_constraintTop_toBottomOf="@id/toolbar_imageActivity"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="输入简介"/>
+    <ImageView
+        app:layout_constraintTop_toBottomOf="@id/editText_caseTitle"
         android:id="@+id/image_activity"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
@@ -26,16 +32,6 @@
         <android.support.constraint.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-
-            <Button
-                android:id="@+id/action_upload_ok"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:scaleType="fitCenter"
-                android:text="确定"
-                android:onClick="upload_ok"/>
-
-
             <Button
                 android:id="@+id/action_upload_cancel"
                 android:layout_width="wrap_content"
@@ -43,8 +39,16 @@
                 android:layout_marginEnd="8dp"
                 android:layout_marginRight="8dp"
                 android:text="取消"
-                android:onClick="upload_cancel"
+                android:onClick="upload_cancel"/>
+            <Button
+                android:id="@+id/action_upload_ok"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:scaleType="fitCenter"
+                android:text="确定"
+                android:onClick="upload_ok"
                 app:layout_constraintEnd_toEndOf="parent" />
+
 
         </android.support.constraint.ConstraintLayout>
 
