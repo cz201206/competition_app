@@ -23,10 +23,12 @@ import java.net.URL;
 
 import site.lool.android.competition.R;
 import site.lool.android.competition.utils.PermissonUtils;
+import site.lool.android.competition.utils.StringUtils;
 
 public class ImageActivity extends AppCompatActivity {
     public EditText editText;
     String imagePath;
+    String imageName;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -37,6 +39,7 @@ public class ImageActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         imagePath = intent.getStringExtra("imagePath");
+        imageName = StringUtils.getNameOfPath(imagePath);
 
         Bitmap bm = BitmapFactory.decodeFile(imagePath);
         ((ImageView)findViewById(R.id.image_activity)).setImageBitmap(bm);
@@ -136,7 +139,7 @@ public class ImageActivity extends AppCompatActivity {
                  */
                 sb.append(LAST+BOUNDARYSTR+END);
                 sb.append("Content-Disposition:form-data;Content-Type:application/octet-stream;name=\"file\";");
-                sb.append("filename=\""+"map_image.png"+"\""+END+END);
+                sb.append("filename=\""+imageName+"\""+END+END);
                 dos.write(sb.toString().getBytes("utf-8"));
                 if (fis != null) {
                     byte[] b=new byte[1024];
