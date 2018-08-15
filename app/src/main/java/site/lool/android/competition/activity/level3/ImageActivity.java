@@ -129,7 +129,7 @@ public class ImageActivity extends AppCompatActivity {
                  */
 
                 sb.append(LAST+BOUNDARYSTR+END);
-                sb.append("Content-Disposition: form-data; name=\"data\""+END+END);
+                sb.append("Content-Disposition: form-data; name=\"title\""+END+END);
                 sb.append(data+END);//内容
                 /**
                  * 循环写入文件
