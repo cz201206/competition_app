@@ -1,5 +1,7 @@
 package site.lool.android.competition.activity.level3;
 
+import android.app.ProgressDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -12,6 +14,8 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
+
 import java.io.BufferedReader;
 import java.io.DataOutputStream;
 import java.io.FileInputStream;
@@ -29,6 +33,7 @@ public class ImageActivity extends AppCompatActivity {
     public EditText editText;
     String imagePath;
     String imageName;
+    ProgressDialog mProgressDialog;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -48,6 +53,15 @@ public class ImageActivity extends AppCompatActivity {
     //region 响应区
 
     public void upload_ok(View view){
+
+        mProgressDialog = ProgressDialog.show(this, "提示", "图片正在上传中", true,
+                true, new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        Toast.makeText(ImageActivity.this, "上传被取消",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
 
         //上传数据
         StringBuilder sb = new StringBuilder("");
@@ -168,6 +182,11 @@ public class ImageActivity extends AppCompatActivity {
                 e.printStackTrace();
             }
             Log.d("cz","run over");
+            mProgressDialog.dismiss();//关闭进度条对话框
+            Looper.prepare();
+            Toast.makeText(ImageActivity.this,"上传成功",Toast.LENGTH_LONG).show();//弹出上传成功对话框
+            ImageActivity.this.finish();//销毁当前 Activity
+            Looper.loop();
         }
 
     }
