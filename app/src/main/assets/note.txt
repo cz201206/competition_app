@@ -1,0 +1,35 @@
+待完成
+
+界面
+✔ 点击病历图标呈现的界面中添加 Toolbar
+✔ Toolbar 中包含上传按钮，病例开始时间，周期（按日，周，月显示病历数量）
+
+界面响应
+✔点击云图标时打开相册选择照片进行上传
+默认界面为近一周的病例标题，点击标题后出现相应图片
+
+【数据库】
+
+病历表字段】
+ID	创建时间	修改时间	简介	图片名称	timeID
+ID	time_insert	time_update	title	image_name	timeID
+
+SQL
+CREATE TABLE `loolsite_db`.`case_history` (
+`ID` INT NOT NULL AUTO_INCREMENT COMMENT 'ID' ,
+`time_insert` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间' ,
+`time_update` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间' ,
+`title` VARCHAR(255) NOT NULL COMMENT '简介' , `image_name` VARCHAR(255) NOT NULL COMMENT '图片名称' ,
+`timeID` INT NOT NULL COMMENT '查询索引' ,
+PRIMARY KEY (`ID`),
+INDEX `index_case_history_timeID` (`timeID`)
+) ENGINE = InnoDB;
+
+INSERT INTO `case_history` (`ID`, `time_insert`, `time_update`, `title`, `image_name`, `timeID`)
+VALUES (NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'title', 'image_name', '201800817')
+
+DELETE FROM `case_history` WHERE `case_history`.`ID` = 1;
+
+UPDATE `case_history` SET `title` = '测试2', `image_name` = '图片名称2' WHERE `case_history`.`ID` = 1
+
+SELECT `time_insert`, `time_update`, `title`, `image_name` FROM `case_history`
