@@ -3,9 +3,9 @@
     package="site.lool.android.competition">
 
     <uses-permission android:name="android.permission.INTERNET" />
-    <!--读写 SD 卡-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"></uses-permission>
+    <!-- 读写 SD 卡 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -32,7 +32,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.level2.SpecialOffersActivity" />
-        <activity android:name=".activity.level3.ImageActivity"></activity>
+        <activity android:name=".activity.level3.ImageActivity" />
+        <activity android:name=".activity.TestActivity"></activity>
     </application>
 
 </manifest>

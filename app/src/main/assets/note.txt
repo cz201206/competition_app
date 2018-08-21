@@ -15,21 +15,32 @@ ID	创建时间	修改时间	简介	图片名称	timeID
 ID	time_insert	time_update	title	image_name	timeID
 
 SQL
+建表
 CREATE TABLE `loolsite_db`.`case_history` (
 `ID` INT NOT NULL AUTO_INCREMENT COMMENT 'ID' ,
 `time_insert` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '插入时间' ,
 `time_update` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '修改时间' ,
 `title` VARCHAR(255) NOT NULL COMMENT '简介' , `image_name` VARCHAR(255) NOT NULL COMMENT '图片名称' ,
-`timeID` INT NOT NULL COMMENT '查询索引' ,
+`timeID` BIGINT(11) NOT NULL COMMENT '查询索引' ,
 PRIMARY KEY (`ID`),
 INDEX `index_case_history_timeID` (`timeID`)
 ) ENGINE = InnoDB;
 
+插入间行
 INSERT INTO `case_history` (`ID`, `time_insert`, `time_update`, `title`, `image_name`, `timeID`)
 VALUES (NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'title', 'image_name', '201800817')
 
+删除
 DELETE FROM `case_history` WHERE `case_history`.`ID` = 1;
 
+更新
 UPDATE `case_history` SET `title` = '测试2', `image_name` = '图片名称2' WHERE `case_history`.`ID` = 1
 
+查询
 SELECT `time_insert`, `time_update`, `title`, `image_name` FROM `case_history`
+
+自复制
+insert into case_history(title,image_name,timeID) SELECT title,image_name,timeID from case_history;
+
+首页
+SELECT * FROM `case_history` order by timeID desc  LIMIT 5

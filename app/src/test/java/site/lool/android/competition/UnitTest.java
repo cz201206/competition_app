@@ -18,6 +18,7 @@ public class UnitTest {
 
     }
 
+
     @NonNull
     private String getNameOfPath(String str) {
         return str.substring(str.lastIndexOf("/")+1);
