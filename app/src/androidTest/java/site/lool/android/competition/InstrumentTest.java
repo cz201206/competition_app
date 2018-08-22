@@ -31,9 +31,7 @@ public class InstrumentTest {
         String  URL_String = "http://10.233.20.203:8079/project/henghost/competition/model/caseHistory/data_json_index.php";
         String params = "username=test&password=123456";
 
-        JSONArray JSONArray = HttpHelper.jsonFromHttp(URL_String,params);
-        List list = HttpHelper.CaseHistoryPojoFromJSONArray(JSONArray);
-        Log.d("cz",list.size()+"");
+        new Thread(new HttpHelper(URL_String,params,null)).start();
     }
 
 

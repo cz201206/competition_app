@@ -1,5 +1,9 @@
 package site.lool.android.competition.utils;
 
+import android.os.Bundle;
+import android.os.Message;
+import android.util.Log;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,13 +18,24 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import android.os.Handler;
 
 import site.lool.android.competition.pojo.CaseHistoryPojo;
 
-public class HttpHelper {
-    public static JSONArray jsonFromHttp(String  URL_String, String params){
+public class HttpHelper implements Runnable{
+    String  URL_String;
+    String params;
+    Handler handler;
+    public static JSONArray JSONArray;
 
-        JSONArray JSONArray = null;
+    public HttpHelper(String URL_String, String params, Handler handler) {
+        this.URL_String = URL_String;
+        this.params = params;
+        this.handler = handler;
+    }
+
+    public void jsonFromHttp(String  URL_String, String params){
+
         try {
             // 1. 获取访问地址URL
             URL url = new URL(URL_String);
@@ -76,7 +91,7 @@ public class HttpHelper {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return JSONArray;
+
     }
     public static List<CaseHistoryPojo> CaseHistoryPojoFromJSONArray(JSONArray JSONArray){
         List<CaseHistoryPojo> list = new ArrayList<CaseHistoryPojo>();
@@ -101,4 +116,15 @@ public class HttpHelper {
         return list;
     }
 
+    @Override
+    public void run() {
+        jsonFromHttp(URL_String, params);
+
+        Message msg= new Message();
+        Bundle bundle = new Bundle();
+        bundle.putString("json","readyed");
+        msg.setData(bundle);
+        handler.sendMessage(msg);
+
+    }
 }

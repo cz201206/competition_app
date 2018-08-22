@@ -4,6 +4,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -52,8 +55,8 @@ public class CaseHistoryActivity extends AppCompatActivity {
     private final int IMAGE = 1;//打开相册时使用
 
     WebView webView;
-
-
+    MyHandler MyHandler;
+    List<CaseHistoryPojo> list_pojos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +76,13 @@ public class CaseHistoryActivity extends AppCompatActivity {
         //初始化 ToolBar
         initToolBar();
         //初始化 ListView
-        initListView();
+        String host = this.getString(R.string.host);
+        String path = this.getString(R.string.path_data_json_index_case_history);
+        String  URL_String = host+path;
+        String params = "username=test&password=123456";
+        MyHandler = new MyHandler();
+        new Thread(new HttpHelper(URL_String,params,MyHandler)
+        ).start();
 
     }
 
@@ -95,77 +104,7 @@ public class CaseHistoryActivity extends AppCompatActivity {
 
 
     //region 实现区
-    private void data_listView_FromHttp(String URL_String){
 
-        try {
-            // 1. 获取访问地址URL
-            URL url = new URL(URL_String);
-            // 2. 创建HttpURLConnection对象
-            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-            /* 3. 设置请求参数等 */
-            // 请求方式
-            connection.setRequestMethod("POST");
-            // 超时时间
-            connection.setConnectTimeout(3000);
-            // 设置是否输出
-            connection.setDoOutput(true);
-            // 设置是否读入
-            connection.setDoInput(true);
-            // 设置是否使用缓存
-            connection.setUseCaches(false);
-            // 设置此 HttpURLConnection 实例是否应该自动执行 HTTP 重定向
-            connection.setInstanceFollowRedirects(true);
-            // 设置使用标准编码格式编码参数的名-值对
-            connection.setRequestProperty("Content-Type", "application/x-www-form-urlencoded");
-            // 连接
-            connection.connect();
-            /* 4. 处理输入输出 */
-            // 写入参数到请求中
-            String params = "username=test&password=123456";
-            OutputStream out = connection.getOutputStream();
-            out.write(params.getBytes());
-            out.flush();
-            out.close();
-            // 从连接中读取响应信息
-            String msg = "";
-            int code = connection.getResponseCode();
-            if (code == 200) {
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String line;
-
-                while ((line = reader.readLine()) != null) {
-                    msg += line + "\n";
-                }
-                reader.close();
-            }
-            // 5. 断开连接
-            connection.disconnect();
-            try {
-
-                JSONArray JSONArray = new JSONArray(msg);
-                JSONObject jsonObject = new JSONObject(JSONArray.get(0).toString());
-
-                String image_name = jsonObject.get("image_name").toString();
-                String title = jsonObject.get("title").toString();
-                String time_insert_str = jsonObject.get("time_insert").toString();
-                String time_update_str = jsonObject.get("time_update").toString();
-                Date time_insert = DateHelper.StringToDate(time_insert_str);
-                Date time_update = DateHelper.StringToDate(time_update_str);
-
-                CaseHistoryPojo caseHistroyPojo = new CaseHistoryPojo(time_insert,time_update,title,image_name);
-
-
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
     //region 设置
     //设置 ToolBar
     private void initToolBar() {
@@ -183,15 +122,7 @@ public class CaseHistoryActivity extends AppCompatActivity {
 
         //为适配器准备参数 上下文，数据，界面，map 中 key 位置，item 中各控件位置
         //数据
-        // json 数据获取
-        String host = this.getString(R.string.host);
-        String path = this.getString(R.string.path_data_json_index_case_history);
-        String  URL_String = host+path;
-        String params = "username=test&password=123456";
-        JSONArray JSONArray = HttpHelper.jsonFromHttp(URL_String,params);
-        List<CaseHistoryPojo> list_pojos = HttpHelper.CaseHistoryPojoFromJSONArray(JSONArray);
-
-        for(int i = 0 ;i< 5; i++){
+        for(int i = 0 ;i< list_pojos.size(); i++){
             Map<String,Object> map = new HashMap<String,Object>();
             map.put("img",R.drawable.case_history_small);
             map.put("title",list_pojos.get(i).title);
@@ -311,5 +242,25 @@ public class CaseHistoryActivity extends AppCompatActivity {
 
     }
     //endregion
+    class MyHandler extends Handler{
+        public MyHandler() {
+        }
 
+        public MyHandler(Looper L) {
+            super(L);
+        }
+
+        // 子类必须重写此方法，接受数据
+        @Override
+        public void handleMessage(Message msg) {
+            Bundle bundle = msg.getData();
+            if(bundle.get("json").equals("readyed")){
+                List<CaseHistoryPojo> pojoes = HttpHelper.CaseHistoryPojoFromJSONArray(HttpHelper.JSONArray);
+                CaseHistoryActivity.this.list_pojos = pojoes;
+                CaseHistoryActivity.this.initListView();
+            }
+
+
+        }
+    }
 }
