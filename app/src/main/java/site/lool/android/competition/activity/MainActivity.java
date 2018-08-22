@@ -2,6 +2,7 @@ package site.lool.android.competition.activity;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 
 import site.lool.android.competition.R;
 import site.lool.android.competition.lib.bottombar.BottomBar;

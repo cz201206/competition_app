@@ -19,4 +19,6 @@
     <!--病历上传到服务器的位置-->
     <string name="path_caseHistroy_photo">/competition/upload/image_uploaded</string>
     <string name="receiver_caseHistroy_photo">/competition/model/caseHistory/fileReceiver.php</string>
+    <!--病历 listView 数据路径-->
+    <string name="path_data_json_index_case_history">/competition/model/caseHistory/data_json_index.php</string>
 </resources>
