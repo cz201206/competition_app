@@ -27,7 +27,7 @@ INDEX `index_case_history_timeID` (`timeID`)
 ) ENGINE = InnoDB;
 
 插入间行
-INSERT INTO `case_history` (`ID`, `time_insert`, `time_update`, `title`, `image_name`, `timeID`)
+INSERT INTO `case_history` (`ID`, `title`, `image_name`, `time_insert`, `time_update`,`timeID`)
 VALUES (NULL, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP, 'title', 'image_name', '201800817')
 
 删除
@@ -37,7 +37,7 @@ DELETE FROM `case_history` WHERE `case_history`.`ID` = 1;
 UPDATE `case_history` SET `title` = '测试2', `image_name` = '图片名称2' WHERE `case_history`.`ID` = 1
 
 查询
-SELECT `time_insert`, `time_update`, `title`, `image_name` FROM `case_history`
+SELECT `ID`, `title`, `image_name`, `time_insert`, `time_update`,`timeID` FROM `case_history`
 
 自复制
 insert into case_history(title,image_name,timeID) SELECT title,image_name,timeID from case_history;

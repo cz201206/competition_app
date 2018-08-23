@@ -11,38 +11,27 @@ import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import site.lool.android.competition.R;
 import site.lool.android.competition.activity.level3.ImageActivity;
+import site.lool.android.competition.activity.level3.ImageUploadActivity;
 import site.lool.android.competition.pojo.CaseHistoryPojo;
-import site.lool.android.competition.utils.DateHelper;
 import site.lool.android.competition.utils.HttpHelper;
 import site.lool.android.competition.utils.PermissonUtils;
 
@@ -56,16 +45,27 @@ public class CaseHistoryActivity extends AppCompatActivity {
 
     WebView webView;
     MyHandler MyHandler;
+    HttpHelper HttpHelper;
+
+    String URL_String;
+    String params;
+
     List<CaseHistoryPojo> list_pojos;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setting();
 
         fn();
 
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        new Thread(HttpHelper).start();
+    }
 
     //region 结构区
     //设置
@@ -76,13 +76,15 @@ public class CaseHistoryActivity extends AppCompatActivity {
         //初始化 ToolBar
         initToolBar();
         //初始化 ListView
+        MyHandler = new MyHandler();
+
         String host = this.getString(R.string.host);
         String path = this.getString(R.string.path_data_json_index_case_history);
-        String  URL_String = host+path;
-        String params = "username=test&password=123456";
-        MyHandler = new MyHandler();
-        new Thread(new HttpHelper(URL_String,params,MyHandler)
-        ).start();
+        URL_String = host+path;
+        params = "username=test&password=123456";
+        HttpHelper =  new HttpHelper(URL_String,params,MyHandler);
+        //获取 json 数据
+        new Thread(HttpHelper).start();
 
     }
 
@@ -93,9 +95,6 @@ public class CaseHistoryActivity extends AppCompatActivity {
 
         //申请读取存储权限
         PermissonUtils.verifyStoragePermissions(this);
-
-        //ListVeiw 添加数据
-        ListView listView_caseHistory = (ListView)findViewById(R.id.listView_caseHistory);
         //openURL();
 
     }
@@ -104,7 +103,12 @@ public class CaseHistoryActivity extends AppCompatActivity {
 
 
     //region 实现区
-
+    //加载图片
+    private void showImage(String imagePath){
+        Intent intent_openImageActivity = new Intent(this,ImageUploadActivity.class);
+        intent_openImageActivity.putExtra("imagePath",imagePath);
+        startActivity(intent_openImageActivity);
+    }
     //region 设置
     //设置 ToolBar
     private void initToolBar() {
@@ -114,7 +118,7 @@ public class CaseHistoryActivity extends AppCompatActivity {
         toolbar_caseHistroy.setOnMenuItemClickListener(onMenuItemClickListener());//设置 toolbar 条目监听器
     }
     //设置 ListView
-    private void initListView() {
+    private void updateListView() {
 
         List list = new ArrayList<>();
         //控件
@@ -124,19 +128,34 @@ public class CaseHistoryActivity extends AppCompatActivity {
         //数据
         for(int i = 0 ;i< list_pojos.size(); i++){
             Map<String,Object> map = new HashMap<String,Object>();
+
             map.put("img",R.drawable.case_history_small);
+
+            map.put("ID",list_pojos.get(i).ID);
             map.put("title",list_pojos.get(i).title);
-            map.put("insertTime",list_pojos.get(i).time_insert);
+            map.put("image_name",list_pojos.get(i).image_name);
+            map.put("time_insert",list_pojos.get(i).time_insert);
+            map.put("time_update",list_pojos.get(i).time_update);
+            map.put("timeID",list_pojos.get(i).timeID);
+
             list.add(map);
         }
         //数据位置排列
-        String[] key_array = new String[]{"img","title","insertTime"};
+        String[] key_array = new String[]{"img","ID","title","image_name","time_insert","time_update","timeID"};
         //控件排列位置非界面，数据模型
-        int[] widght_array = new int[]{R.id.item_imageView_caseHistory,R.id.item_textView_caseHistory_title,R.id.item_textView_caseHistory_time_insert};
+        int[] widght_array = new int[]{
+                R.id.item_imageView_caseHistory,
+                R.id.item_textView_caseHistory_ID,
+                R.id.item_textView_caseHistory_title,
+                R.id.item_textView_caseHistory_image_name,
+                R.id.item_textView_caseHistory_time_insert,
+                R.id.item_textView_caseHistory_time_update,
+                R.id.item_textView_caseHistory_time_timeID};
 
         SimpleAdapter adapter = new SimpleAdapter(this,list,R.layout.item_case_history,key_array,widght_array);
 
         listView.setAdapter(adapter);
+        listView.setOnItemClickListener(onItemClickListener);
     }
     //endregion
 
@@ -165,24 +184,8 @@ public class CaseHistoryActivity extends AppCompatActivity {
 
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.finish(); // back button
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    //设置 - 控件 - toolbar 菜单项
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.call_history,menu);
-        return true;
-    }
-
-    //region 监听器 - toolbar 菜单项
+    //region 响应区
+    //toolbar 菜单项
     private Toolbar.OnMenuItemClickListener onMenuItemClickListener(){
         Toolbar.OnMenuItemClickListener onMenuItemClick = new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -204,16 +207,43 @@ public class CaseHistoryActivity extends AppCompatActivity {
         };
         return onMenuItemClick;
     }
+    //响应 ListView Item 点击事件
+    AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener(){
 
-    //endregion
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            TextView textView_image_name = (TextView)view.findViewById(R.id.item_textView_caseHistory_image_name);
+            String image_name = textView_image_name.getText().toString();
 
-    //region 响应区
+            Intent intent_openImageActivity = new Intent(CaseHistoryActivity.this,ImageActivity.class);
+            intent_openImageActivity.putExtra("image_name",image_name);
+            CaseHistoryActivity.this.startActivity(intent_openImageActivity);
+
+            Toast.makeText(CaseHistoryActivity.this,"图片名称"+image_name,Toast.LENGTH_SHORT).show();
+        }
+    };
     public void upload(View view){
 
         //打开相册上传照片数据
         Uri uri_openAmblum = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
         Intent intent_openAmblum = new Intent(Intent.ACTION_PICK,uri_openAmblum);
         startActivityForResult(intent_openAmblum, IMAGE);
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish(); // back button
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    //设置 - 控件 - toolbar 菜单项
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.call_history,menu);
+        return true;
     }
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -234,13 +264,7 @@ public class CaseHistoryActivity extends AppCompatActivity {
 
 
     }
-    //加载图片
-    private void showImage(String imagePath){
-        Intent intent_openImageActivity = new Intent(this,ImageActivity.class);
-        intent_openImageActivity.putExtra("imagePath",imagePath);
-        startActivity(intent_openImageActivity);
 
-    }
     //endregion
     class MyHandler extends Handler{
         public MyHandler() {
@@ -257,7 +281,7 @@ public class CaseHistoryActivity extends AppCompatActivity {
             if(bundle.get("json").equals("readyed")){
                 List<CaseHistoryPojo> pojoes = HttpHelper.CaseHistoryPojoFromJSONArray(HttpHelper.JSONArray);
                 CaseHistoryActivity.this.list_pojos = pojoes;
-                CaseHistoryActivity.this.initListView();
+                CaseHistoryActivity.this.updateListView();
             }
 
 

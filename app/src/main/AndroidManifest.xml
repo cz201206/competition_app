@@ -32,8 +32,12 @@
             </intent-filter>
         </activity>
         <activity android:name=".activity.level2.SpecialOffersActivity" />
-        <activity android:name=".activity.level3.ImageActivity" />
-        <activity android:name=".activity.TestActivity"></activity>
+        <activity android:name=".activity.level3.ImageUploadActivity" />
+        <activity android:name=".activity.TestActivity" />
+        <activity
+            android:name=".activity.level3.ImageActivity"
+            android:label="@string/title_activity_image"
+            android:theme="@style/FullscreenTheme"></activity>
     </application>
 
 </manifest>
