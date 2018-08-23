@@ -35,6 +35,7 @@
         <activity android:name=".activity.level3.ImageUploadActivity" />
         <activity android:name=".activity.TestActivity" />
         <activity
+            android:screenOrientation="landscape"
             android:name=".activity.level3.ImageActivity"
             android:label="@string/title_activity_image"
             android:theme="@style/FullscreenTheme"></activity>
