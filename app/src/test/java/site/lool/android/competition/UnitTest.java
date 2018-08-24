@@ -1,8 +1,13 @@
 package site.lool.android.competition;
 
 import android.support.annotation.NonNull;
+import android.util.Log;
 
 import org.junit.Test;
+
+import java.util.Date;
+
+import site.lool.android.competition.utils.DateHelper;
 
 public class UnitTest {
     public UnitTest(){};
@@ -10,12 +15,9 @@ public class UnitTest {
     @Test
     public void test(){
 
-        String str = "/storage/emulated/0/DCIM/Camera/IMG_20180810_022848.jpg";
-
-        String name = getNameOfPath(str);
-
-        System.out.println(name);
-
+       int month = 12;
+       String month_str = month>9?(month+1)+"":"0"+(month+1);
+       System.out.print(month_str);
     }
 
 
@@ -23,4 +25,6 @@ public class UnitTest {
     private String getNameOfPath(String str) {
         return str.substring(str.lastIndexOf("/")+1);
     }
+
+
 }

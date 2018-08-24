@@ -1,6 +1,7 @@
 package site.lool.android.competition.activity.level2;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -18,6 +19,7 @@ import android.webkit.WebSettings;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.AdapterView;
+import android.widget.DatePicker;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
@@ -29,9 +31,11 @@ import java.util.List;
 import java.util.Map;
 
 import site.lool.android.competition.R;
+import site.lool.android.competition.activity.MainActivity;
 import site.lool.android.competition.activity.level3.ImageActivity;
 import site.lool.android.competition.activity.level3.ImageUploadActivity;
 import site.lool.android.competition.pojo.CaseHistoryPojo;
+import site.lool.android.competition.utils.DateHelper;
 import site.lool.android.competition.utils.HttpHelper;
 import site.lool.android.competition.utils.PermissonUtils;
 
@@ -44,8 +48,10 @@ public class CaseHistoryActivity extends AppCompatActivity {
     private final int IMAGE = 1;//打开相册时使用
 
     WebView webView;
+    TextView text_caseHistroy_date;
     MyHandler MyHandler;
     HttpHelper HttpHelper;
+    DatePickerDialog picker;
 
     String URL_String;
     String params;
@@ -70,21 +76,37 @@ public class CaseHistoryActivity extends AppCompatActivity {
     //region 结构区
     //设置
     private void setting(){
-
         //设置 主界面
         setContentView(R.layout.activity_case_history);
+        text_caseHistroy_date = (TextView)findViewById(R.id.text_caseHistroy_date);
+
         //初始化 ToolBar
         initToolBar();
+
         //初始化 ListView
         MyHandler = new MyHandler();
-
         String host = this.getString(R.string.host);
         String path = this.getString(R.string.path_data_json_index_case_history);
         URL_String = host+path;
         params = "username=test&password=123456";
         HttpHelper =  new HttpHelper(URL_String,params,MyHandler);
-        //获取 json 数据
         new Thread(HttpHelper).start();
+
+        //初始化 DatePicker
+        Map<String, Integer> date_year_month_day = DateHelper.date_year_month_day();
+        int year= date_year_month_day.get("year");
+        int month= date_year_month_day.get("month");
+        int day = date_year_month_day.get("day");
+        DatePickerDialog.OnDateSetListener DatePickerListener = new DatePickerDialog.OnDateSetListener(){
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                //更新界面
+                CaseHistoryActivity.this.text_caseHistroy_date.setText(DateHelper.date_show(year,month,day));
+                //获取数据 发送 startTime period(day,week,month,year) 两个参数，均为字符串类型
+                Toast.makeText(CaseHistoryActivity.this,DateHelper.dateTOTimeID(year,month,day),Toast.LENGTH_SHORT).show();
+            }
+        };
+        picker = new DatePickerDialog(CaseHistoryActivity.this, DatePickerListener, year, month, day);
 
     }
 
@@ -229,6 +251,14 @@ public class CaseHistoryActivity extends AppCompatActivity {
         Intent intent_openAmblum = new Intent(Intent.ACTION_PICK,uri_openAmblum);
         startActivityForResult(intent_openAmblum, IMAGE);
     }
+
+    //打开日期选择窗口
+    public void openDatePicker(View view){
+
+
+        picker.show();
+    }
+
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
