@@ -33,7 +33,7 @@ public class DateHelper {
     }
 
     //调整月份
-    public static String month_nature(int month){
+    public static String month_nature_lengthOf2(int month){
         String month_str = month>=9?(month+1)+"":"0"+(month+1);
         return month_str;
     }
@@ -45,12 +45,12 @@ public class DateHelper {
 
     //组合时间成字符串紧凑型
     public static String date_show(int year, int month, int day){
-        return "起始时间："+year+"年"+month_nature(month)+"月"+day_lengthOf2(day)+"日";
+        return "起始时间："+year+"年"+month_nature_lengthOf2(month)+"月"+day_lengthOf2(day)+"日";
     }
 
     // 将时间组合为数据库查询 timeID 形式
-    public static String dateTOTimeID(int year, int month, int day){
-        return year+month_nature(month)+day+"000000";
+    public static String date_start(int year, int month, int day){
+        return year+month_nature_lengthOf2(month)+day_lengthOf2(day);
     }
 
 }

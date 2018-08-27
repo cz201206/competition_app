@@ -31,10 +31,9 @@ public class HttpHelper implements Runnable{
     public static final int NETWORK_ERROR = 2;
     public static final int SERVER_ERROR = 3;
 
-    String  URL_String;
-    String params;
-    Handler handler;
-    public static JSONArray JSONArray;
+    public String  URL_String;
+    public String params;
+    public Handler handler;
 
     public HttpHelper(String URL_String, String params, Handler handler) {
         this.URL_String = URL_String;
@@ -42,7 +41,8 @@ public class HttpHelper implements Runnable{
         this.handler = handler;
     }
 
-    public void jsonFromHttp(String  URL_String, String params){
+    //接收来自服务器 json 格式的数据
+    public JSONArray jsonFromHttp(String  URL_String, String params){
 
         try {
             // 1. 获取访问地址URL
@@ -88,7 +88,7 @@ public class HttpHelper implements Runnable{
             connection.disconnect();
             try {
 
-                JSONArray = new JSONArray(msg);
+                return new JSONArray(msg);
 
             } catch (JSONException e) {
                 e.printStackTrace();
@@ -99,6 +99,7 @@ public class HttpHelper implements Runnable{
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return  null;
 
     }
     public static Bitmap bitmapFromHttp(String  URL_String, String params,Handler handler){
@@ -154,49 +155,34 @@ public class HttpHelper implements Runnable{
         return bitmap;
     }
 
-    public static List<CaseHistoryPojo> CaseHistoryPojoFromJSONArray(JSONArray JSONArray){
-        List<CaseHistoryPojo> list = new ArrayList<CaseHistoryPojo>();
-        for(int i=0 ;i<JSONArray.length();i++){
-            JSONObject jsonObject = null;
-            try {
-                //单条记录对象
-                jsonObject = new JSONObject(JSONArray.get(i).toString());
 
-                //病历ID
-                int ID = Integer.parseInt(jsonObject.get("ID").toString());
-                //病历简介
-                String title = jsonObject.get("title").toString();
-                //病历图片名称
-                String image_name = jsonObject.get("image_name").toString();
-                //病历上传时间
-                String time_insert_str = jsonObject.get("time_insert").toString();
-                //病历更新时间
-                String time_update_str = jsonObject.get("time_update").toString();
-                long timeID = Long.parseLong(jsonObject.get("timeID").toString());
-
-                //时间数据类型转换
-                Date time_insert = DateHelper.StringToDate(time_insert_str);
-                Date time_update = DateHelper.StringToDate(time_update_str);
-
-                CaseHistoryPojo caseHistroyPojo = new CaseHistoryPojo(ID,title,image_name,time_insert,time_update,timeID);
-                list.add(caseHistroyPojo);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-
-        }
-        return list;
-    }
 
     @Override
     public void run() {
-        jsonFromHttp(URL_String, params);
-
-        Message msg= new Message();
+        //向服务器请求数据
+        JSONArray JSONArray = jsonFromHttp(URL_String, params);
+        //准备 msg 对象
+        Message msg= Message.obtain();
+        //msg 运输数据对象
+        msg.obj = JSONArray;
+        //msg 运输字符串数据
         Bundle bundle = new Bundle();
-        bundle.putString("json","readyed");
+        bundle.putString("json","readied");
         msg.setData(bundle);
+        //向handler 发送信息
         handler.sendMessage(msg);
 
+    }
+
+    public void setURL_String(String URL_String) {
+        this.URL_String = URL_String;
+    }
+
+    public void setParams(String params) {
+        this.params = params;
+    }
+
+    public void setHandler(Handler handler) {
+        this.handler = handler;
     }
 }

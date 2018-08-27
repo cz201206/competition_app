@@ -25,6 +25,8 @@ import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.json.JSONArray;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -34,6 +36,7 @@ import site.lool.android.competition.R;
 import site.lool.android.competition.activity.MainActivity;
 import site.lool.android.competition.activity.level3.ImageActivity;
 import site.lool.android.competition.activity.level3.ImageUploadActivity;
+import site.lool.android.competition.activity.service.CaseHistroyService;
 import site.lool.android.competition.pojo.CaseHistoryPojo;
 import site.lool.android.competition.utils.DateHelper;
 import site.lool.android.competition.utils.HttpHelper;
@@ -45,6 +48,9 @@ import site.lool.android.competition.utils.PermissonUtils;
 
 public class CaseHistoryActivity extends AppCompatActivity {
 
+    String host;
+    String path;
+    String timeID;
     private final int IMAGE = 1;//打开相册时使用
 
     WebView webView;
@@ -60,9 +66,8 @@ public class CaseHistoryActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        MyHandler = new MyHandler();//为主线程更新界面
         setting();
-
         fn();
 
     }
@@ -84,13 +89,12 @@ public class CaseHistoryActivity extends AppCompatActivity {
         initToolBar();
 
         //初始化 ListView
-        MyHandler = new MyHandler();
-        String host = this.getString(R.string.host);
-        String path = this.getString(R.string.path_data_json_index_case_history);
+        host = this.getString(R.string.host);
+        path = this.getString(R.string.path_data_json_index_case_history);
         URL_String = host+path;
         params = "username=test&password=123456";
         HttpHelper =  new HttpHelper(URL_String,params,MyHandler);
-        new Thread(HttpHelper).start();
+        new Thread(HttpHelper).start();//子线程执行数据填充任务
 
         //初始化 DatePicker
         Map<String, Integer> date_year_month_day = DateHelper.date_year_month_day();
@@ -103,7 +107,8 @@ public class CaseHistoryActivity extends AppCompatActivity {
                 //更新界面
                 CaseHistoryActivity.this.text_caseHistroy_date.setText(DateHelper.date_show(year,month,day));
                 //获取数据 发送 startTime period(day,week,month,year) 两个参数，均为字符串类型
-                Toast.makeText(CaseHistoryActivity.this,DateHelper.dateTOTimeID(year,month,day),Toast.LENGTH_SHORT).show();
+                Toast.makeText(CaseHistoryActivity.this,DateHelper.date_start(year,month,day),Toast.LENGTH_SHORT).show();
+                timeID = DateHelper.date_start(year,month,day);
             }
         };
         picker = new DatePickerDialog(CaseHistoryActivity.this, DatePickerListener, year, month, day);
@@ -156,7 +161,7 @@ public class CaseHistoryActivity extends AppCompatActivity {
             map.put("ID",list_pojos.get(i).ID);
             map.put("title",list_pojos.get(i).title);
             map.put("image_name",list_pojos.get(i).image_name);
-            map.put("time_insert",list_pojos.get(i).time_insert);
+            map.put("time_insert",DateHelper.DateToString(list_pojos.get(i).time_insert));//将时间转化为含中文字符的格式
             map.put("time_update",list_pojos.get(i).time_update);
             map.put("timeID",list_pojos.get(i).timeID);
 
@@ -215,10 +220,19 @@ public class CaseHistoryActivity extends AppCompatActivity {
                 String msg = ""+menuItem.getItemId();
                 switch (menuItem.getItemId()) {
                     case R.id.action_by_year:
-                        msg += "Click action_upload";
+                        params = "timeID="+timeID+"&period=year";
+                        HttpHelper =  new HttpHelper(URL_String,params,MyHandler);
+                        new Thread(HttpHelper).start();//子线程执行数据填充任务
                         break;
-                    case R.id.action_date:
-                        msg += "Click action_date";
+                    case R.id.action_by_month:
+                        params = "timeID="+timeID+"&period=month";
+                        HttpHelper =  new HttpHelper(URL_String,params,MyHandler);
+                        new Thread(HttpHelper).start();//子线程执行数据填充任务
+                        break;
+                    case R.id.action_by_week:
+                        params = "timeID="+timeID+"&period=week";
+                        HttpHelper =  new HttpHelper(URL_String,params,MyHandler);
+                        new Thread(HttpHelper).start();//子线程执行数据填充任务
                         break;
                 }
 
@@ -308,8 +322,9 @@ public class CaseHistoryActivity extends AppCompatActivity {
         @Override
         public void handleMessage(Message msg) {
             Bundle bundle = msg.getData();
-            if(bundle.get("json").equals("readyed")){
-                List<CaseHistoryPojo> pojoes = HttpHelper.CaseHistoryPojoFromJSONArray(HttpHelper.JSONArray);
+            if(bundle.get("json").equals("readied")){
+                JSONArray JSONArray = (JSONArray)msg.obj;
+                List<CaseHistoryPojo> pojoes = CaseHistroyService.CaseHistoryPojoFromJSONArray(JSONArray);
                 CaseHistoryActivity.this.list_pojos = pojoes;
                 CaseHistoryActivity.this.updateListView();
             }
