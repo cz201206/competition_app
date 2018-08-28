@@ -9,13 +9,16 @@
     <!--<string name="host">http://lool.site</string>-->
     <!--<string name="host">http://10.233.20.203:8079/project/henghost</string>-->
 
-    <!--路径_病历-->
-    <string name="path_caseHistroy">/competition/view/home/caseHistory.php</string>
+    <!--计步-->
+    <string name="path_stepCounting">/competition/view/home/stepCounting.php</string>
+    <string name="path_stepCounting_commitData">/competition/model/stepCounting/data_insert.php</string>
     <!--路径_科普文章-->
     <string name="article">/competition/view/home/article.php</string>
     <!--路径_促销活动-->
     <string name="specialOffers">/competition/view/specialOffers/specialOffers1.php</string>
 
+    <!--病历_路径-->
+    <string name="path_caseHistroy">/competition/view/home/caseHistory.php</string>
     <!--病历上传到服务器的位置-->
     <string name="path_caseHistroy_photo_upload">/competition/res/uploadedImage</string>
     <string name="receiver_caseHistroy_photo">/competition/model/caseHistory/fileReceiver.php</string>

@@ -15,9 +15,8 @@ public class UnitTest {
     @Test
     public void test(){
 
-       int month = 12;
-       String month_str = month>9?(month+1)+"":"0"+(month+1);
-       System.out.print(month_str);
+       float a = 40.1f;
+       System.out.println((int)a);
     }
 
 

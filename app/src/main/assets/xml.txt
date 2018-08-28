@@ -1,0 +1,8 @@
+constraint 布局
+控件相对位置
+app:layout_constraintLeft_toRightOf="parent"
+app:layout_constraintRight_toLeftOf="@id/button2"
+
+位置偏移
+layout_constraintHorizontal_bias（水平方向偏移）（范围0-1）
+layout_constraintVertical_bias（垂直方向偏移）（范围0-1）
