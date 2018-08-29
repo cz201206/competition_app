@@ -14,6 +14,7 @@ import site.lool.android.competition.utils.DateHelper;
 public class CaseHistroyService {
     public static List<CaseHistoryPojo> CaseHistoryPojoFromJSONArray(JSONArray JSONArray){
         List<CaseHistoryPojo> list = new ArrayList<CaseHistoryPojo>();
+        if(JSONArray==null)return list;
         for(int i=0 ;i<JSONArray.length();i++){
             JSONObject jsonObject = null;
             try {
