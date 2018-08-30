@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/item_choose_endTime"
+        android:title="选择截止日期" />
+    <item
+        android:id="@+id/item_by_year"
+        android:title="年" />
+    <item
+        android:id="@+id/item_by_month"
+        android:title="月" />
+    <item
+        android:id="@+id/item_by_week"
+        android:title="周"/>
+
+
+</menu>

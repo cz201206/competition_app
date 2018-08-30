@@ -2,6 +2,7 @@ package site.lool.android.competition.forjs;
 
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.webkit.JavascriptInterface;
 
 import site.lool.android.competition.R;
@@ -41,5 +42,13 @@ public class Home {
         intent.putExtra("path",context.getString(R.string.specialOffers));
         context.startActivity(intent);
         Intent intent1 = new Intent();
+    }
+    @JavascriptInterface
+    public void openURL_sos(){
+        String host = context.getString(R.string.host);
+        String path = context.getString(R.string.path_sos);
+        Uri uri = Uri.parse(host+path);
+        Intent intent = new Intent(Intent.ACTION_VIEW, uri);
+        context.startActivity(intent);
     }
 }

@@ -25,4 +25,7 @@
     <!--病历 listView 数据路径-->
     <string name="path_data_json_index_case_history">/competition/model/caseHistory/data_json.php</string>
     <string name="title_activity_image">ImageActivity</string>
+
+    <!--求救模块首页 path-->
+    <string name="path_sos">/competition/view/AKFH/index.html</string>
 </resources>

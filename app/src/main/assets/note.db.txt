@@ -59,3 +59,10 @@ DELETE FROM `step_counting` WHERE `step_counting`.`ID` = 1;
 UPDATE `step_counting` SET `stepCount` = '2' WHERE `step_counting`.`ID` = 1
 
 查询
+SELECT * FROM `step_counting` order by timeID asc  LIMIT 10
+
+自复制
+insert into step_counting(`time_insert`, `time_update`, `stepCount`, `timeID`) SELECT `time_insert`, `time_update`, `stepCount`, `timeID` from step_counting;
+
+查看最新记录
+SELECT * FROM `step_counting` ORDER BY ID desc

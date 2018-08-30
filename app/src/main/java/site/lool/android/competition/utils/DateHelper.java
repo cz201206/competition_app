@@ -45,7 +45,7 @@ public class DateHelper {
 
     //组合时间成字符串紧凑型
     public static String date_show(int year, int month, int day){
-        return "起始时间："+year+"年"+month_nature_lengthOf2(month)+"月"+day_lengthOf2(day)+"日";
+        return "选择时间为："+year+"年"+month_nature_lengthOf2(month)+"月"+day_lengthOf2(day)+"日";
     }
 
     // 将时间组合为数据库查询 timeID 形式

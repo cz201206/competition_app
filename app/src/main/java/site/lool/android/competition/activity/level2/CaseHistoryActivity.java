@@ -33,7 +33,6 @@ import java.util.List;
 import java.util.Map;
 
 import site.lool.android.competition.R;
-import site.lool.android.competition.activity.MainActivity;
 import site.lool.android.competition.activity.level3.ImageActivity;
 import site.lool.android.competition.activity.level3.ImageUploadActivity;
 import site.lool.android.competition.activity.service.CaseHistroyService;
@@ -286,7 +285,7 @@ public class CaseHistoryActivity extends AppCompatActivity {
     //设置 - 控件 - toolbar 菜单项
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.call_history,menu);
+        getMenuInflater().inflate(R.menu.period,menu);
         return true;
     }
     @Override

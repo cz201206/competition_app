@@ -21,6 +21,12 @@ public class WebViewActivity extends AppCompatActivity {
         String url = host+path;
         //打开网址
         WebView webView = (WebView)findViewById(R.id.webView_);
+        webView.getSettings().setDomStorageEnabled(true);
+        webView.getSettings().setAllowFileAccess(true);
+        webView.getSettings().setAppCacheEnabled(true);
+        String appCachePath = getApplication().getCacheDir().getAbsolutePath();
+        webView.getSettings().setAppCachePath(appCachePath);
+        webView.getSettings().setDatabaseEnabled(true);
         webView.setWebViewClient(new WebViewClient(){//本activity中显示
             @Override
             public boolean shouldOverrideUrlLoading(WebView view, String url) {
