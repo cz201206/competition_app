@@ -39,7 +39,8 @@
             android:label="@string/title_activity_image"
             android:screenOrientation="landscape"
             android:theme="@style/FullscreenTheme" />
-        <activity android:name=".activity.level2.StepCountingActivity"></activity>
+        <activity android:name=".activity.level2.StepCountingActivity" />
+        <activity android:name=".activity.level2.BloodGlucoseActivity"></activity>
     </application>
 
 </manifest>

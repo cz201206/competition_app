@@ -66,3 +66,21 @@ insert into step_counting(`time_insert`, `time_update`, `stepCount`, `timeID`) S
 
 查看最新记录
 SELECT * FROM `step_counting` ORDER BY ID desc
+
+【血糖】
+ID	插入时间	更新时间	血糖值	时间ID
+ID	time_insert	time_update	value timeID
+
+SQL
+CREATE TABLE `loolsite_db`.`blood_glucose` (
+`ID` INT NOT NULL AUTO_INCREMENT ,
+`time_insert` DATE NOT NULL ,
+`time_update` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+`value` INT NOT NULL ,
+`timeID` INT NOT NULL ,
+PRIMARY KEY (`ID`),
+INDEX `index_blood_glucose_timeID` (`timeID`)
+) ENGINE = InnoDB;
+
+自复制
+insert into blood_glucose(`time_insert`, `time_update`, `value`, `timeID`) SELECT `time_insert`, `time_update`, `value`, `timeID` from blood_glucose;

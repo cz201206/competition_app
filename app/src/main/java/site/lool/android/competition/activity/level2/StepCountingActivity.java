@@ -94,13 +94,7 @@ public class StepCountingActivity extends AppCompatActivity implements SensorEve
         Log.e("cz","销毁程序，取消传感器注册");
     }
 
-    //设置 - 控件 - toolbar 菜单项
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.period_step_counting,menu);
-        item_choose_endTime = menu.findItem(R.id.item_choose_endTime);
-        return true;
-    }
+
 
     //region 功能区
 
@@ -224,6 +218,13 @@ public class StepCountingActivity extends AppCompatActivity implements SensorEve
     //endregion 初始化
 
     //region 响应区
+    //设置 - 控件 - toolbar 菜单项
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.period_step_counting,menu);
+        item_choose_endTime = menu.findItem(R.id.item_choose_endTime);
+        return true;
+    }
     //toolbar 菜单项
         private Toolbar.OnMenuItemClickListener onMenuItemClickListener(){
             Toolbar.OnMenuItemClickListener onMenuItemClick = new Toolbar.OnMenuItemClickListener() {

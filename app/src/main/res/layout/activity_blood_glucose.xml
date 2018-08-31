@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.level2.BloodGlucoseActivity">
+    <!--工具条-->
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/toolbar_bloodGlucose"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:background="#00000000"
+        android:minHeight="?attr/actionBarSize"
+        android:theme="?attr/actionBarTheme"
+        app:layout_constraintTop_toTopOf="parent"
+        app:titleTextColor="@color/white">
+
+        <android.support.constraint.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <EditText
+                android:id="@+id/editText_bloodGlucose_toolbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:hint="输入今天血糖值"
+                android:inputType="number"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toLeftOf="@id/button_bloodGlucose_toolbar" />
+
+
+
+            <Button
+                android:id="@+id/button_bloodGlucose_toolbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:onClick="commit"
+                android:text="提交"
+                app:layout_constraintLeft_toRightOf="@id/editText_bloodGlucose_toolbar"
+                app:layout_constraintRight_toRightOf="parent" />
+        </android.support.constraint.ConstraintLayout>
+    </android.support.v7.widget.Toolbar>
+
+    <!--网页内容
+    <WebView
+        android:id="@+id/webView_stepCounting"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_stepCounting"/>
+        -->
+    <com.github.mikephil.charting.charts.LineChart
+        android:id="@+id/lineChart_stepCounting"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_bloodGlucose"
+        app:layout_constraintLeft_toLeftOf="parent"
+        tools:layout_editor_absoluteX="0dp" />
+    
+</android.support.constraint.ConstraintLayout>
