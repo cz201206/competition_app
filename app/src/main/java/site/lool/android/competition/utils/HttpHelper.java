@@ -27,6 +27,7 @@ import android.os.Handler;
 import site.lool.android.competition.pojo.CaseHistoryPojo;
 
 public class HttpHelper implements Runnable{
+//region 成员变量
     public static final int GET_DATA_SUCCESS = 1;
     public static final int NETWORK_ERROR = 2;
     public static final int SERVER_ERROR = 3;
@@ -40,8 +41,9 @@ public class HttpHelper implements Runnable{
         this.params = params;
         this.handler = handler;
     }
+//endregion 成员变量
 
-    //接收来自服务器 json 格式的数据
+    //接收来自服务器 json 格式的数据，格式为：json 数组
     public JSONArray jsonFromHttp(String  URL_String, String params){
 
         try {
@@ -102,6 +104,8 @@ public class HttpHelper implements Runnable{
         return  null;
 
     }
+
+    //获取网络图片
     public static Bitmap bitmapFromHttp(String  URL_String, String params,Handler handler){
         Bitmap bitmap = null;
         try {
@@ -156,24 +160,27 @@ public class HttpHelper implements Runnable{
     }
 
 
-
+//region run
     @Override
     public void run() {
-        //向服务器请求数据
+        //服务器数据
         JSONArray JSONArray = jsonFromHttp(URL_String, params);
-        //准备 msg 对象
+
         Message msg= Message.obtain();
-        //msg 运输数据对象
         msg.obj = JSONArray;
-        //msg 运输字符串数据
-        Bundle bundle = new Bundle();
-        bundle.putString("json","readied");
-        msg.setData(bundle);
-        //向handler 发送信息
+
+        //判断是否取得网络数据
+        if(null!=JSONArray)
+        msg.what = GET_DATA_SUCCESS;
+        else msg.what = NETWORK_ERROR;
+
+        //通知 handler 处理数据
         handler.sendMessage(msg);
-
+        Log.e("cz","httpHelper 请求数据完成");
     }
+//endregion run
 
+//region getter setter
     public void setURL_String(String URL_String) {
         this.URL_String = URL_String;
     }
@@ -185,4 +192,5 @@ public class HttpHelper implements Runnable{
     public void setHandler(Handler handler) {
         this.handler = handler;
     }
+//endregion
 }

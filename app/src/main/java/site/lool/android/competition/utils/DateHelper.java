@@ -49,7 +49,7 @@ public class DateHelper {
     }
 
     // 将时间组合为数据库查询 timeID 形式
-    public static String date_start(int year, int month, int day){
+    public static String timeID(int year, int month, int day){
         return year+month_nature_lengthOf2(month)+day_lengthOf2(day);
     }
 

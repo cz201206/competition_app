@@ -36,21 +36,25 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
+import java.util.TimeZone;
 
 import site.lool.android.competition.R;
-import site.lool.android.competition.activity.service.CaseHistroyService;
-import site.lool.android.competition.pojo.CaseHistoryPojo;
 import site.lool.android.competition.utils.DateHelper;
 import site.lool.android.competition.utils.HttpHelper;
 import site.lool.android.competition.utils.SharedPreferencesHelper;
 
 public class StepCountingActivity extends AppCompatActivity implements SensorEventListener {
+    //region 成员变量
     WebView webView;
     String url_webView;
-    String url_commitData;
-    String params;
+
+    HttpHelper httpHelper;
+    String url_commitData,params_url_commitData;
+    String url_datas,params_url_datas;
+
     SensorManager sensorManager;
     TextView textView_stepCoution_toolbar;
     SharedPreferencesHelper shredPres;
@@ -59,22 +63,26 @@ public class StepCountingActivity extends AppCompatActivity implements SensorEve
     int stepCount_sensor;
     int stepCount;
     int stepCount_record;
-    LineChart mLineChart;
     Toolbar toolbar_stepCounting;
     DatePickerDialog picker;
     String timeID;
+    String timeID_today;
     MenuItem item_choose_endTime;
+
+    LineChart mLineChart;
+    List<Integer> list_datas;
+    //endregion 成员变量
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         setContentView(R.layout.activity_step_counting);
         initMember();
-        initWebView();
-        out();
-        initLineChart();
+//        initWebView();
+        initOut();
         initToolBar();
         initDatePicker();
+        initLineChart();
     }
 
 
@@ -94,14 +102,52 @@ public class StepCountingActivity extends AppCompatActivity implements SensorEve
         return true;
     }
 
+    //region 功能区
+
+    private void reDrawLineChart(){
+        //数据处理 - 排序
+        List<Entry> entries = new ArrayList<>();
+        for (int i = 0; i < list_datas.size(); i++) {
+            int data = list_datas.get(i);
+            entries.add(new Entry(i, data));
+        }
+        //数据处理 - 添加标签
+        LineDataSet dataSet = new LineDataSet(entries, "Label1");
+        //数据处理 - 设置每个点之间线的颜色
+        dataSet.setColors(Color.BLACK, Color.GRAY, Color.RED, Color.GREEN);
+        //数据处理 - 数据显示格式
+        dataSet.setValueFormatter(new IValueFormatter() {   // 将值转换为想要显示的形式，比如，某点值为1，变为“1￥”,MP提供了三个默认的转换器，
+            // LargeValueFormatter:将大数字变为带单位数字；PercentFormatter：将值转换为百分数；StackedValueFormatter，对于BarChart，是否只显示最大值图还是都显示
+            @Override
+            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+                return (int)value + "步";
+            }
+        });
+
+        LineData lineData = new LineData(dataSet);
+        mLineChart.setData(lineData);
+        //重绘图表
+        mLineChart.invalidate();
+    }
+
+    //endregion 初始化
     //region 初始化
 
     //初始化成员变量
     private void initMember() {
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT+08:00"));    //获取东八区时间
+        int year = c.get(Calendar.YEAR);    //获取年
+        int month = c.get(Calendar.MONTH);   //获取月份，0表示1月份
+        int day = c.get(Calendar.DAY_OF_MONTH);    //获取当前天数
+        timeID_today = DateHelper.timeID(year,month,day);
+        timeID = timeID_today;
+
         textView_stepCoution_toolbar = (TextView)findViewById(R.id.textView_stepCoution_toolbar);
-       editText_stepCoution_toolbar = (EditText)findViewById(R.id.editText_stepCoution_toolbar);
+        editText_stepCoution_toolbar = (EditText)findViewById(R.id.editText_stepCoution_toolbar);
         url_webView = getString(R.string.host)+getString(R.string.path_stepCounting);
         url_commitData = getString(R.string.host)+getString(R.string.path_stepCounting_commitData);
+        url_datas = getString(R.string.host)+getString(R.string.path_stepCounting_datas);
+        params_url_datas = "timeID=&period=";
         sensorManager = (SensorManager)getSystemService(Context.SENSOR_SERVICE);
         boolean isSuccess = sensorManager.registerListener(this,sensorManager.getDefaultSensor(Sensor.TYPE_STEP_COUNTER),SensorManager.SENSOR_DELAY_GAME);
         if(!isSuccess){
@@ -112,11 +158,17 @@ public class StepCountingActivity extends AppCompatActivity implements SensorEve
         stepCount_record = Integer.parseInt(shredPres.getSharedPreference("stepCount",stepCount).toString());
         myHandler = new MyHandler();
         mLineChart = (LineChart)findViewById(R.id.lineChart_stepCounting);
+        //数据
+        list_datas = new ArrayList<Integer>();
+
+        httpHelper = new HttpHelper(url_datas,params_url_datas,myHandler);
+        new Thread(httpHelper).start();
     }
 
 
     //初始化 WebView
     private void initWebView(){
+        /*
         webView = (WebView)findViewById(R.id.webView_stepCounting);
         //设置
         webView.setWebViewClient(new WebViewClient(){//本activity中显示
@@ -131,39 +183,15 @@ public class StepCountingActivity extends AppCompatActivity implements SensorEve
         settings.setJavaScriptEnabled(true);
         //载入
         webView.loadUrl(url_webView);
+        */
     }
 
     //初始化图表
     private void initLineChart(){
-        //数据
-        float[] dataObjects = {1, 2, 3, 4, 5, 6, 2, 6, 5, 8, 7, 9, 100};
-        //数据处理 - 排序
-        List<Entry> entries = new ArrayList<>();
-        for (int i = 0; i < dataObjects.length; i++) {
-            float data = dataObjects[i];
-            entries.add(new Entry(i, data));
-        }
-        //数据处理 - 添加标签
-        LineDataSet dataSet = new LineDataSet(entries, "Label1");
-        //数据处理 - 设置每个点之间线的颜色
-        dataSet.setColors(Color.BLACK, Color.GRAY, Color.RED, Color.GREEN);
-        //数据处理 - 数据显示格式
-        dataSet.setValueFormatter(new IValueFormatter() {   // 将值转换为想要显示的形式，比如，某点值为1，变为“1￥”,MP提供了三个默认的转换器，
-            // LargeValueFormatter:将大数字变为带单位数字；PercentFormatter：将值转换为百分数；StackedValueFormatter，对于BarChart，是否只显示最大值图还是都显示
-            @Override
-            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-                return value + "步";
-            }
-        });
 
-        LineData lineData = new LineData(dataSet);
-        /*List<ILineDataSet> sets = new ArrayList<>();  // 多条线
-        sets.add(dataSet);
-        sets.add(dataSet1);
-        sets.add(dataSet2);
-        LineData lineData = new LineData(sets);
-        */
-        mLineChart.setData(lineData);
+        mLineChart.setData(new LineData());
+        Log.e("cz","初始化 chart 完成");
+
     }
     private void initToolBar() {
         toolbar_stepCounting = (Toolbar) findViewById(R.id.toolbar_stepCounting);
@@ -183,13 +211,17 @@ public class StepCountingActivity extends AppCompatActivity implements SensorEve
                 //更新界面
                 StepCountingActivity.this.item_choose_endTime.setTitle(DateHelper.date_show(year,month,day));
                 //获取数据 发送 startTime period(day,week,month,year) 两个参数，均为字符串类型
-                Toast.makeText(StepCountingActivity.this,DateHelper.date_start(year,month,day),Toast.LENGTH_SHORT).show();
-                timeID = DateHelper.date_start(year,month,day);
+                Toast.makeText(StepCountingActivity.this,DateHelper.timeID(year,month,day),Toast.LENGTH_SHORT).show();
+                timeID = DateHelper.timeID(year,month,day);
             }
         };
         picker = new DatePickerDialog(StepCountingActivity.this, DatePickerListener, year, month, day);
     }
-    //endregion
+    private void initOut(){
+        Object value = shredPres.getSharedPreference("stepCount",1);
+        Log.e("cz",value+";");
+    }
+    //endregion 初始化
 
     //region 响应区
     //toolbar 菜单项
@@ -197,21 +229,26 @@ public class StepCountingActivity extends AppCompatActivity implements SensorEve
             Toolbar.OnMenuItemClickListener onMenuItemClick = new Toolbar.OnMenuItemClickListener() {
                 @Override
                 public boolean onMenuItemClick(MenuItem menuItem) {
-                    String msg = ""+menuItem.getItemId();
-                    switch (menuItem.getItemId()) {
+                    httpHelper.setURL_String(url_datas);
+                    httpHelper.setParams(params_url_datas);
+
+                    int itemId = menuItem.getItemId();
+                    switch (itemId) {
                         case R.id.item_by_year:
-                            /*
-                            params = "timeID="+timeID+"&period=year";
-                            HttpHelper =  new HttpHelper(URL_String,params,MyHandler);
-                            new Thread(HttpHelper).start();//子线程执行数据填充任务
-                            */
+
+                            params_url_datas = "timeID="+timeID+"&period=year";
+                            new Thread(httpHelper).start();
                             Toast.makeText(StepCountingActivity.this,"年选择",Toast.LENGTH_SHORT).show();
                             break;
                         case R.id.item_by_month:
+                            params_url_datas = "timeID="+timeID+"&period=month";
+                            new Thread(httpHelper).start();
                             Toast.makeText(StepCountingActivity.this,"月选择",Toast.LENGTH_SHORT).show();
                             break;
                         case R.id.item_by_week:
-                            Toast.makeText(StepCountingActivity.this,"日选择",Toast.LENGTH_SHORT).show();
+                            params_url_datas = "timeID="+timeID+"&period=week";
+                            new Thread(httpHelper).start();
+                            Toast.makeText(StepCountingActivity.this,"周选择",Toast.LENGTH_SHORT).show();
                             break;
                         case R.id.item_choose_endTime:
                             picker.show();
@@ -248,8 +285,10 @@ public class StepCountingActivity extends AppCompatActivity implements SensorEve
         shredPres.put("stepCount",stepCount+stepCount_record);
 
         //向服务器提交记录
-        params = "stepCount="+stepCount;
-        HttpHelper httpHelper= new HttpHelper(url_commitData,params,myHandler);
+        params_url_commitData = "timeID="+timeID_today+"&stepCount="+stepCount;
+
+        httpHelper.setURL_String(url_commitData);
+        httpHelper.setParams(params_url_commitData);
         new Thread(httpHelper).start();
     }
 
@@ -271,30 +310,64 @@ public class StepCountingActivity extends AppCompatActivity implements SensorEve
     public void onAccuracyChanged(Sensor sensor, int i) {
 
     }
-
-    //endregion
-
-    private void out(){
-        Object value = shredPres.getSharedPreference("stepCount",1);
-        Log.e("cz",value+";");
-    }
-
     class MyHandler extends Handler{
         //数据格式 [{result:"insert_ok",data:[]}]
         @Override
         public void handleMessage(Message msg) {
-            Bundle bundle = msg.getData();
-            if(bundle.get("json").equals("readied")){
-                JSONArray JSONArray = (JSONArray)msg.obj;
+            JSONArray JSONArray = null;
+            JSONObject JSONObject = null;
+            String result = null;
+            JSONArray datas = null;
+
+            //处理来自服务器的数据
+            if(HttpHelper.GET_DATA_SUCCESS == msg.what){
+               JSONArray = (JSONArray)msg.obj;
                 try {
-                    JSONObject JSONObject = (JSONObject)JSONArray.get(0);
-                    if(JSONObject.get("result").equals("insert_ok")){
-                        Toast.makeText(StepCountingActivity.this,"提交成功",Toast.LENGTH_SHORT).show();
+                    //获取结果对象中的业务类型识别码[{result:"识别码",datas:[]}]
+                    JSONObject = (JSONObject)JSONArray.get(0);
+                    //处理结果 - 插入数据成功
+                    result = (String)JSONObject.get("result");
+                    switch (result){
+
+                        //插入数据成功后的提示
+                        case "insert_ok" :
+                            Toast.makeText(StepCountingActivity.this,"提交成功",Toast.LENGTH_SHORT).show();
+                            break;
+
+                        //插入数据 失败 的提示
+                        case "insert_no" :
+                            Toast.makeText(StepCountingActivity.this,"请铢勿重复提交数据",Toast.LENGTH_SHORT).show();
+                            break;
+
+                        //更新 成功的提示
+                        case "update_ok" :
+                            Toast.makeText(StepCountingActivity.this,"更新数据成功",Toast.LENGTH_SHORT).show();
+                            break;
+
+                        //查询到数据后的处理
+                        case "select_ok":
+                            list_datas.clear();
+                            datas = (JSONArray)JSONObject.get("datas");
+                            for (int i = 0; i<datas.length();i++){
+                                JSONObject jobj = (JSONObject) datas.get(i);
+                                int stepCount = (int)jobj.get("stepCount");
+                                list_datas.add(stepCount);
+                            }
+                            if(!(datas.length()<1))
+                            reDrawLineChart();
+                            break;
+
                     }
+                    Log.e("cz","数据结果："+result);
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
         }
     }
+    //endregion
+
+
+
+
 }

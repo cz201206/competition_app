@@ -51,19 +51,19 @@
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.Toolbar>
 
-    <!--网页内容-->
+    <!--网页内容
     <WebView
         android:id="@+id/webView_stepCounting"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/toolbar_stepCounting"/>
-
+        -->
     <com.github.mikephil.charting.charts.LineChart
         android:id="@+id/lineChart_stepCounting"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/webView_stepCounting"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_stepCounting"
         app:layout_constraintLeft_toLeftOf="parent"
         tools:layout_editor_absoluteX="0dp" />
 

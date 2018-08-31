@@ -12,6 +12,7 @@
     <!--计步-->
     <string name="path_stepCounting">/competition/view/home/stepCounting.php</string>
     <string name="path_stepCounting_commitData">/competition/model/stepCounting/data_insert.php</string>
+    <string name="path_stepCounting_datas">/competition/model/stepCounting/datas.php</string>
     <!--路径_科普文章-->
     <string name="article">/competition/view/home/article.php</string>
     <!--路径_促销活动-->

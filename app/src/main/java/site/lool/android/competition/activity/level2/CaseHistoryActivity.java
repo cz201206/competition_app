@@ -106,8 +106,8 @@ public class CaseHistoryActivity extends AppCompatActivity {
                 //更新界面
                 CaseHistoryActivity.this.text_caseHistroy_date.setText(DateHelper.date_show(year,month,day));
                 //获取数据 发送 startTime period(day,week,month,year) 两个参数，均为字符串类型
-                Toast.makeText(CaseHistoryActivity.this,DateHelper.date_start(year,month,day),Toast.LENGTH_SHORT).show();
-                timeID = DateHelper.date_start(year,month,day);
+                Toast.makeText(CaseHistoryActivity.this,DateHelper.timeID(year,month,day),Toast.LENGTH_SHORT).show();
+                timeID = DateHelper.timeID(year,month,day);
             }
         };
         picker = new DatePickerDialog(CaseHistoryActivity.this, DatePickerListener, year, month, day);
@@ -320,14 +320,16 @@ public class CaseHistoryActivity extends AppCompatActivity {
         // 子类必须重写此方法，接受数据
         @Override
         public void handleMessage(Message msg) {
-            Bundle bundle = msg.getData();
-            if(bundle.get("json").equals("readied")){
+
+            if(HttpHelper.GET_DATA_SUCCESS == msg.what){
                 JSONArray JSONArray = (JSONArray)msg.obj;
                 List<CaseHistoryPojo> pojoes = CaseHistroyService.CaseHistoryPojoFromJSONArray(JSONArray);
                 CaseHistoryActivity.this.list_pojos = pojoes;
                 CaseHistoryActivity.this.updateListView();
+            }else{
+                Toast.makeText(CaseHistoryActivity.this,"服务器异常",Toast.LENGTH_SHORT).show();
+                CaseHistoryActivity.this.finish();
             }
-
 
         }
     }
