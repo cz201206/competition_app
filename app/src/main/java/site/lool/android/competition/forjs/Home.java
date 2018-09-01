@@ -7,9 +7,11 @@ import android.webkit.JavascriptInterface;
 
 import site.lool.android.competition.R;
 import site.lool.android.competition.activity.level2.BloodGlucoseActivity;
+import site.lool.android.competition.activity.level2.BloodPressureActivity;
 import site.lool.android.competition.activity.level2.CaseHistoryActivity;
 import site.lool.android.competition.activity.level2.StepCountingActivity;
 import site.lool.android.competition.activity.level2.WebViewActivity;
+import site.lool.android.competition.activity.level2.WeightActivity;
 
 public class Home {
     private Context context;
@@ -37,6 +39,18 @@ public class Home {
     @JavascriptInterface
     public void openActivity_bloodGlucose(){
         Intent intent = new Intent(context, BloodGlucoseActivity.class);
+        context.startActivity(intent);
+    }
+    //打开血压 activity
+    @JavascriptInterface
+    public void openActivity_bloodPressure(){
+        Intent intent = new Intent(context, BloodPressureActivity.class);
+        context.startActivity(intent);
+    }
+    //打开体重 activity
+    @JavascriptInterface
+    public void openActivity_weight(){
+        Intent intent = new Intent(context, WeightActivity.class);
         context.startActivity(intent);
     }
 

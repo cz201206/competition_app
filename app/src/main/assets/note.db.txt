@@ -84,3 +84,25 @@ INDEX `index_blood_glucose_timeID` (`timeID`)
 
 自复制
 insert into blood_glucose(`time_insert`, `time_update`, `value`, `timeID`) SELECT `time_insert`, `time_update`, `value`, `timeID` from blood_glucose;
+
+【血压】
+CREATE TABLE `loolsite_db`.`blood_pressure` (
+`ID` INT NOT NULL AUTO_INCREMENT ,
+`time_insert` DATE NOT NULL ,
+`time_update` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+`value0` INT NOT NULL ,
+`timeID` INT NOT NULL ,
+PRIMARY KEY (`ID`),
+INDEX `index_blood_pressure_timeID` (`timeID`)
+) ENGINE = InnoDB;
+
+【体重】
+CREATE TABLE `loolsite_db`.`weight` (
+`ID` INT NOT NULL AUTO_INCREMENT ,
+`time_insert` DATE NOT NULL ,
+`time_update` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+`value0` INT NOT NULL ,
+`timeID` INT NOT NULL ,
+PRIMARY KEY (`ID`),
+INDEX `index_weight_timeID` (`timeID`)
+) ENGINE = InnoDB;

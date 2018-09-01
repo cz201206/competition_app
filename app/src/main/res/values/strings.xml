@@ -34,6 +34,14 @@
     path_bloodGlucose_·
     <string name="path_bloodGlucose_commitData">/competition/model/bloodGlucose/data_insert.php</string>
     <string name="path_bloodGlucose_datas">/competition/model/bloodGlucose/datas.php</string>
+    <!--血压-->
+    path_bloodGlucose_·
+    <string name="path_bloodPressure_commitData">/competition/model/bloodPressure/data_insert.php</string>
+    <string name="path_bloodPressure_datas">/competition/model/bloodPressure/datas.php</string>
+    <!--体重-->
+    path_bloodGlucose_·
+    <string name="path_weight_commitData">/competition/model/weight/data_insert.php</string>
+    <string name="path_weight_datas">/competition/model/weight/datas.php</string>
     <!--求救模块首页 path-->
     <string name="path_sos">/competition/view/AKFH/index.html</string>
 </resources>

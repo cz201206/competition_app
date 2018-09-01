@@ -8,7 +8,7 @@
 ✔点击云图标时打开相册选择照片进行上传
 默认界面为近一周的病例标题，点击标题后出现相应图片
 
-完成剩下三个模块
+完成剩下三个模块 血压，体重
 1.模块 activity
 2.模块布局文件
 3.site.lool.android.competition.forjs.Home 响应js 打开相应的 Activity

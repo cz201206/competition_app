@@ -40,7 +40,9 @@
             android:screenOrientation="landscape"
             android:theme="@style/FullscreenTheme" />
         <activity android:name=".activity.level2.StepCountingActivity" />
-        <activity android:name=".activity.level2.BloodGlucoseActivity"></activity>
+        <activity android:name=".activity.level2.BloodGlucoseActivity" />
+        <activity android:name=".activity.level2.BloodPressureActivity" />
+        <activity android:name=".activity.level2.WeightActivity"></activity>
     </application>
 
 </manifest>

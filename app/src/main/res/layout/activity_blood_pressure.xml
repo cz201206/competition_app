@@ -4,10 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".activity.level2.BloodGlucoseActivity">
+    tools:context=".activity.level2.BloodPressureActivity">
     <!--工具条-->
     <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar_bloodGlucose"
+        android:id="@+id/toolbar_bloodPressure"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
@@ -22,34 +22,33 @@
             android:layout_height="match_parent">
 
             <EditText
-                android:id="@+id/editText_bloodGlucose_toolbar"
+                android:id="@+id/editText_bloodPressure_toolbar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:hint="输入今天血糖值"
+                android:hint="输入今天血压值"
                 android:inputType="number"
                 app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toLeftOf="@id/button_bloodGlucose_toolbar" />
+                app:layout_constraintRight_toLeftOf="@id/button_bloodPressure_toolbar" />
 
 
 
             <Button
-                android:id="@+id/button_bloodGlucose_toolbar"
+                android:id="@+id/button_bloodPressure_toolbar"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:onClick="commit"
                 android:text="提交"
-                app:layout_constraintLeft_toRightOf="@id/editText_bloodGlucose_toolbar"
+                app:layout_constraintLeft_toRightOf="@id/editText_bloodPressure_toolbar"
                 app:layout_constraintRight_toRightOf="parent" />
         </android.support.constraint.ConstraintLayout>
     </android.support.v7.widget.Toolbar>
 
 
     <com.github.mikephil.charting.charts.LineChart
-        android:id="@+id/lineChart_BloodGlucose"
+        android:id="@+id/lineChart_bloodPressure"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_bloodGlucose"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_bloodPressure"
         app:layout_constraintLeft_toLeftOf="parent" />
-    
 </android.support.constraint.ConstraintLayout>
