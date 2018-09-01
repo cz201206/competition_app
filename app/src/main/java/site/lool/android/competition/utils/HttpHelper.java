@@ -45,7 +45,7 @@ public class HttpHelper implements Runnable{
 
     //接收来自服务器 json 格式的数据，格式为：json 数组
     public JSONArray jsonFromHttp(String  URL_String, String params){
-
+        Log.e("cz","来自 httphelper 请求参数："+params);
         try {
             // 1. 获取访问地址URL
             URL url = new URL(URL_String);

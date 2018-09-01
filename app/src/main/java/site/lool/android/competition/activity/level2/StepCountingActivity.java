@@ -98,28 +98,33 @@ public class StepCountingActivity extends AppCompatActivity implements SensorEve
 
     //region 功能区
 
-    private void reDrawLineChart(){
-        //数据处理 - 排序
-        List<Entry> entries = new ArrayList<>();
-        for (int i = 0; i < list_datas.size(); i++) {
-            int data = list_datas.get(i);
-            entries.add(new Entry(i, data));
-        }
-        //数据处理 - 添加标签
-        LineDataSet dataSet = new LineDataSet(entries, "步数");
-        //数据处理 - 设置每个点之间线的颜色
-        dataSet.setColors(Color.BLACK, Color.GRAY, Color.RED, Color.GREEN);
-        //数据处理 - 数据显示格式
-        dataSet.setValueFormatter(new IValueFormatter() {   // 将值转换为想要显示的形式，比如，某点值为1，变为“1￥”,MP提供了三个默认的转换器，
-            // LargeValueFormatter:将大数字变为带单位数字；PercentFormatter：将值转换为百分数；StackedValueFormatter，对于BarChart，是否只显示最大值图还是都显示
-            @Override
-            public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-                return (int)value + "步";
+    private void reDrawLineChart(int size){
+        if(size<=0){
+            LineData lineData = new LineData();
+            mLineChart.setData(lineData);
+        }else {
+            //数据处理 - 排序
+            List<Entry> entries = new ArrayList<>();
+            for (int i = 0; i < list_datas.size(); i++) {
+                int data = list_datas.get(i);
+                entries.add(new Entry(i, data));
             }
-        });
+            //数据处理 - 添加标签
+            LineDataSet dataSet = new LineDataSet(entries, "步数");
+            //数据处理 - 设置每个点之间线的颜色
+            dataSet.setColors(Color.BLACK, Color.GRAY, Color.RED, Color.GREEN);
+            //数据处理 - 数据显示格式
+            dataSet.setValueFormatter(new IValueFormatter() {   // 将值转换为想要显示的形式，比如，某点值为1，变为“1￥”,MP提供了三个默认的转换器，
+                // LargeValueFormatter:将大数字变为带单位数字；PercentFormatter：将值转换为百分数；StackedValueFormatter，对于BarChart，是否只显示最大值图还是都显示
+                @Override
+                public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
+                    return (int) value + "步";
+                }
+            });
 
-        LineData lineData = new LineData(dataSet);
-        mLineChart.setData(lineData);
+            LineData lineData = new LineData(dataSet);
+            mLineChart.setData(lineData);
+        }
         //重绘图表
         mLineChart.invalidate();
     }
@@ -238,16 +243,19 @@ public class StepCountingActivity extends AppCompatActivity implements SensorEve
                         case R.id.item_by_year:
 
                             params_url_datas = "timeID="+timeID+"&period=year";
+                            httpHelper.setParams(params_url_datas);
                             new Thread(httpHelper).start();
                             Toast.makeText(StepCountingActivity.this,"年选择",Toast.LENGTH_SHORT).show();
                             break;
                         case R.id.item_by_month:
                             params_url_datas = "timeID="+timeID+"&period=month";
+                            httpHelper.setParams(params_url_datas);
                             new Thread(httpHelper).start();
                             Toast.makeText(StepCountingActivity.this,"月选择",Toast.LENGTH_SHORT).show();
                             break;
                         case R.id.item_by_week:
                             params_url_datas = "timeID="+timeID+"&period=week";
+                            httpHelper.setParams(params_url_datas);
                             new Thread(httpHelper).start();
                             Toast.makeText(StepCountingActivity.this,"周选择",Toast.LENGTH_SHORT).show();
                             break;
@@ -333,6 +341,7 @@ public class StepCountingActivity extends AppCompatActivity implements SensorEve
                         //插入数据成功后的提示
                         case "insert_ok" :
                             Toast.makeText(StepCountingActivity.this,"提交成功",Toast.LENGTH_SHORT).show();
+                            StepCountingActivity.this.finish();
                             break;
 
                         //插入数据 失败 的提示
@@ -343,6 +352,7 @@ public class StepCountingActivity extends AppCompatActivity implements SensorEve
                         //更新 成功的提示
                         case "update_ok" :
                             Toast.makeText(StepCountingActivity.this,"更新数据成功",Toast.LENGTH_SHORT).show();
+                            StepCountingActivity.this.finish();
                             break;
 
                         //查询到数据后的处理
@@ -354,8 +364,7 @@ public class StepCountingActivity extends AppCompatActivity implements SensorEve
                                 int stepCount = (int)jobj.get("stepCount");
                                 list_datas.add(stepCount);
                             }
-                            if(!(datas.length()<1))
-                            reDrawLineChart();
+                            reDrawLineChart(datas.length());
                             break;
 
                     }

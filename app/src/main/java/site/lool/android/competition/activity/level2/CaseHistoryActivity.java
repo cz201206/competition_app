@@ -41,12 +41,13 @@ import site.lool.android.competition.utils.DateHelper;
 import site.lool.android.competition.utils.HttpHelper;
 import site.lool.android.competition.utils.PermissonUtils;
 
-//region discription
+// discription
 
-//endregion discription
+//end discription
 
 public class CaseHistoryActivity extends AppCompatActivity {
 
+    //region 成员变量
     String host;
     String path;
     String timeID;
@@ -62,6 +63,7 @@ public class CaseHistoryActivity extends AppCompatActivity {
     String params;
 
     List<CaseHistoryPojo> list_pojos;
+    //endregion
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -77,7 +79,7 @@ public class CaseHistoryActivity extends AppCompatActivity {
         new Thread(HttpHelper).start();
     }
 
-    //region 结构区
+    //region 初始化
     //设置
     private void setting(){
         //设置 主界面
@@ -124,18 +126,8 @@ public class CaseHistoryActivity extends AppCompatActivity {
         //openURL();
 
     }
-    //endregion discription
+    //end discription
 
-
-
-    //region 实现区
-    //加载图片
-    private void showImage(String imagePath){
-        Intent intent_openImageActivity = new Intent(this,ImageUploadActivity.class);
-        intent_openImageActivity.putExtra("imagePath",imagePath);
-        startActivity(intent_openImageActivity);
-    }
-    //region 设置
     //设置 ToolBar
     private void initToolBar() {
         Toolbar toolbar_caseHistroy = (Toolbar) findViewById(R.id.toolbar_caseHistroy);
@@ -143,6 +135,16 @@ public class CaseHistoryActivity extends AppCompatActivity {
         setSupportActionBar(toolbar_caseHistroy);//启用点击响应
         toolbar_caseHistroy.setOnMenuItemClickListener(onMenuItemClickListener());//设置 toolbar 条目监听器
     }
+    //endregion
+
+    //region 功能区
+    //加载图片
+    private void showImage(String imagePath){
+        Intent intent_openImageActivity = new Intent(this,ImageUploadActivity.class);
+        intent_openImageActivity.putExtra("imagePath",imagePath);
+        startActivity(intent_openImageActivity);
+    }
+
     //设置 ListView
     private void updateListView() {
 
@@ -210,8 +212,72 @@ public class CaseHistoryActivity extends AppCompatActivity {
 
     }
 
+    //设置 - 控件 - toolbar 菜单项
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.period,menu);
+        return true;
+    }
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        //获取图片路径
+        if (requestCode == IMAGE && resultCode == Activity.RESULT_OK && data != null) {
+            Uri selectedImage = data.getData();
+            String[] filePathColumns = {MediaStore.Images.Media.DATA};
+            Cursor c = getContentResolver().query(selectedImage, filePathColumns, null, null, null);
+            c.moveToFirst();
+            int columnIndex = c.getColumnIndex(filePathColumns[0]);
+            String imagePath = c.getString(columnIndex);
+            showImage(imagePath);
+            c.close();
+        }else{
+            Toast.makeText(this,"没有选择图片",Toast.LENGTH_SHORT).show();
+        }
+
+
+    }
+
     //region 响应区
-    //toolbar 菜单项
+    //打开日期选择窗口
+    public void openDatePicker(View view){
+        picker.show();
+    }
+    //打开上传 Activity
+    public void upload(View view){
+        //打开相册上传照片数据
+        Uri uri_openAmblum = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        Intent intent_openAmblum = new Intent(Intent.ACTION_PICK,uri_openAmblum);
+        startActivityForResult(intent_openAmblum, IMAGE);
+    }
+    //响应 ListView Item 点击事件
+    AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener(){
+
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            TextView textView_image_name = (TextView)view.findViewById(R.id.item_textView_caseHistory_image_name);
+            String image_name = textView_image_name.getText().toString();
+
+            Intent intent_openImageActivity = new Intent(CaseHistoryActivity.this,ImageActivity.class);
+            intent_openImageActivity.putExtra("image_name",image_name);
+            CaseHistoryActivity.this.startActivity(intent_openImageActivity);
+
+            Toast.makeText(CaseHistoryActivity.this,"图片名称"+image_name,Toast.LENGTH_SHORT).show();
+        }
+    };
+
+    // ListView 单个点击事件
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                this.finish(); // back button
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    //toolbar 菜单项事件
     private Toolbar.OnMenuItemClickListener onMenuItemClickListener(){
         Toolbar.OnMenuItemClickListener onMenuItemClick = new Toolbar.OnMenuItemClickListener() {
             @Override
@@ -242,73 +308,6 @@ public class CaseHistoryActivity extends AppCompatActivity {
         };
         return onMenuItemClick;
     }
-    //响应 ListView Item 点击事件
-    AdapterView.OnItemClickListener onItemClickListener = new AdapterView.OnItemClickListener(){
-
-        @Override
-        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-            TextView textView_image_name = (TextView)view.findViewById(R.id.item_textView_caseHistory_image_name);
-            String image_name = textView_image_name.getText().toString();
-
-            Intent intent_openImageActivity = new Intent(CaseHistoryActivity.this,ImageActivity.class);
-            intent_openImageActivity.putExtra("image_name",image_name);
-            CaseHistoryActivity.this.startActivity(intent_openImageActivity);
-
-            Toast.makeText(CaseHistoryActivity.this,"图片名称"+image_name,Toast.LENGTH_SHORT).show();
-        }
-    };
-    public void upload(View view){
-
-        //打开相册上传照片数据
-        Uri uri_openAmblum = android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        Intent intent_openAmblum = new Intent(Intent.ACTION_PICK,uri_openAmblum);
-        startActivityForResult(intent_openAmblum, IMAGE);
-    }
-
-    //打开日期选择窗口
-    public void openDatePicker(View view){
-
-
-        picker.show();
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home:
-                this.finish(); // back button
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    //设置 - 控件 - toolbar 菜单项
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.period,menu);
-        return true;
-    }
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        //获取图片路径
-        if (requestCode == IMAGE && resultCode == Activity.RESULT_OK && data != null) {
-            Uri selectedImage = data.getData();
-            String[] filePathColumns = {MediaStore.Images.Media.DATA};
-            Cursor c = getContentResolver().query(selectedImage, filePathColumns, null, null, null);
-            c.moveToFirst();
-            int columnIndex = c.getColumnIndex(filePathColumns[0]);
-            String imagePath = c.getString(columnIndex);
-            showImage(imagePath);
-            c.close();
-        }else{
-            Toast.makeText(this,"from CaseHistoryActivity:没有图片",Toast.LENGTH_SHORT).show();
-        }
-
-
-    }
-
-    //endregion
     class MyHandler extends Handler{
         public MyHandler() {
         }
@@ -333,4 +332,6 @@ public class CaseHistoryActivity extends AppCompatActivity {
 
         }
     }
+
+    //endregion
 }

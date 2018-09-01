@@ -90,11 +90,18 @@ CREATE TABLE `loolsite_db`.`blood_pressure` (
 `ID` INT NOT NULL AUTO_INCREMENT ,
 `time_insert` DATE NOT NULL ,
 `time_update` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-`value0` INT NOT NULL ,
+`value_low` INT NOT NULL ,
+`value_high` INT NOT NULL ,
 `timeID` INT NOT NULL ,
 PRIMARY KEY (`ID`),
 INDEX `index_blood_pressure_timeID` (`timeID`)
 ) ENGINE = InnoDB;
+
+插入数据
+INSERT INTO `blood_pressure` (`ID`, `time_insert`, `time_update`, `value_high`, `value_low`, `timeID`) VALUES (NULL, '2018-09-01', CURRENT_TIMESTAMP, '120', '90', '20180901');
+
+更新数据
+UPDATE `blood_pressure` SET `value_high` = '121', `value_low` = '91' WHERE `blood_pressure`.`ID` = 1
 
 【体重】
 CREATE TABLE `loolsite_db`.`weight` (
