@@ -76,7 +76,7 @@ CREATE TABLE `loolsite_db`.`blood_glucose` (
 `ID` INT NOT NULL AUTO_INCREMENT ,
 `time_insert` DATE NOT NULL ,
 `time_update` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-`value` INT NOT NULL ,
+`value0` INT NOT NULL ,
 `timeID` INT NOT NULL ,
 PRIMARY KEY (`ID`),
 INDEX `index_blood_glucose_timeID` (`timeID`)

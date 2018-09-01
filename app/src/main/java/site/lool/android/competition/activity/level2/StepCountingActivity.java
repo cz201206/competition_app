@@ -106,7 +106,7 @@ public class StepCountingActivity extends AppCompatActivity implements SensorEve
             entries.add(new Entry(i, data));
         }
         //数据处理 - 添加标签
-        LineDataSet dataSet = new LineDataSet(entries, "Label1");
+        LineDataSet dataSet = new LineDataSet(entries, "步数");
         //数据处理 - 设置每个点之间线的颜色
         dataSet.setColors(Color.BLACK, Color.GRAY, Color.RED, Color.GREEN);
         //数据处理 - 数据显示格式

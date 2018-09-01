@@ -84,6 +84,7 @@ public class HttpHelper implements Runnable{
                 while ((line = reader.readLine()) != null) {
                     msg += line + "\n";
                 }
+                Log.e("cz","from httpheler response(msg)："+msg);
                 reader.close();
             }
             // 5. 断开连接

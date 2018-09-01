@@ -5,9 +5,13 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
 
-    <string name="host">http://10.233.20.203:8079/project/henghost</string>
+    <string name="host">http://192.168.31.136/project/henghost</string>
+    <!--正式-->
     <!--<string name="host">http://lool.site</string>-->
+    <!--公司-->
     <!--<string name="host">http://10.233.20.203:8079/project/henghost</string>-->
+    <!--家里-->
+    <!--<string name="host">http://192.168.31.136:8079/project/henghost</string>-->
 
     <!--计步-->
     <string name="path_stepCounting">/competition/view/home/stepCounting.php</string>
@@ -26,7 +30,10 @@
     <!--病历 listView 数据路径-->
     <string name="path_data_json_index_case_history">/competition/model/caseHistory/data_json.php</string>
     <string name="title_activity_image">ImageActivity</string>
-
+    <!--血糖-->
+    path_bloodGlucose_·
+    <string name="path_bloodGlucose_commitData">/competition/model/bloodGlucose/data_insert.php</string>
+    <string name="path_bloodGlucose_datas">/competition/model/bloodGlucose/datas.php</string>
     <!--求救模块首页 path-->
     <string name="path_sos">/competition/view/AKFH/index.html</string>
 </resources>

@@ -11,6 +11,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,9 +29,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Map;
+import java.util.TimeZone;
 
 import site.lool.android.competition.R;
+import site.lool.android.competition.utils.DateHelper;
 import site.lool.android.competition.utils.HttpHelper;
 import site.lool.android.competition.utils.SharedPreferencesHelper;
 
@@ -39,12 +45,10 @@ public class BloodGlucoseActivity extends AppCompatActivity {
     String url_commitData,params_url_commitData;
     String url_datas,params_url_datas;
 
-    SensorManager sensorManager;
-    TextView textView_stepCoution_toolbar;
-    SharedPreferencesHelper shredPres;
-    EditText editText_stepCoution_toolbar;
+    int value0;
+    EditText editText_bloodGlucose_toolbar;
     BloodGlucoseActivity.MyHandler myHandler;
-    Toolbar toolbar_stepCounting;
+    Toolbar toolbar_BloodGlucose;
     DatePickerDialog picker;
     String timeID;
     String timeID_today;
@@ -57,16 +61,59 @@ public class BloodGlucoseActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_blood_glucose);
-
+        initMember();
         initToolBar();
+        initLineChart();
+        initDatePicker();
     }
     
     //region 初始化
+    private void initMember(){
+        url_commitData = url_commitData = getString(R.string.host)+getString(R.string.path_bloodGlucose_commitData);
+        url_datas = getString(R.string.host)+getString(R.string.path_bloodGlucose_datas);
+        myHandler =  new MyHandler();
+        editText_bloodGlucose_toolbar = (EditText)findViewById(R.id.editText_bloodGlucose_toolbar);
+        httpHelper = new HttpHelper(null,null,myHandler);
+        list_datas = new ArrayList<Integer>();
+        mLineChart = (LineChart)findViewById(R.id.lineChart_BloodGlucose);
+        initTimeID();
+    }
     private void initToolBar() {
-        toolbar_stepCounting = (Toolbar) findViewById(R.id.toolbar_bloodGlucose);
-        toolbar_stepCounting.setTitle("计步");//标题
-        setSupportActionBar(toolbar_stepCounting);//启用点击响应
-        toolbar_stepCounting.setOnMenuItemClickListener(onMenuItemClickListener());//设置 toolbar 条目监听器
+        toolbar_BloodGlucose = (Toolbar) findViewById(R.id.toolbar_bloodGlucose);
+        toolbar_BloodGlucose.setTitle("血糖");//标题
+        setSupportActionBar(toolbar_BloodGlucose);//启用点击响应
+        toolbar_BloodGlucose.setOnMenuItemClickListener(onMenuItemClickListener());//设置 toolbar 条目监听器
+    }
+    private void initLineChart(){
+        httpHelper.setURL_String(url_datas);
+        httpHelper.setParams(params_url_datas = "timeID=&period=");
+        new Thread(httpHelper).start();
+    }
+    private void initDatePicker(){
+        //初始化 DatePicker
+        Map<String, Integer> date_year_month_day = DateHelper.date_year_month_day();
+        int year= date_year_month_day.get("year");
+        int month= date_year_month_day.get("month");
+        int day = date_year_month_day.get("day");
+        DatePickerDialog.OnDateSetListener DatePickerListener = new DatePickerDialog.OnDateSetListener(){
+            @Override
+            public void onDateSet(DatePicker datePicker, int year, int month, int day) {
+                //更新界面
+                BloodGlucoseActivity.this.item_choose_endTime.setTitle(DateHelper.date_show(year,month,day));
+                //获取数据 发送 startTime period(day,week,month,year) 两个参数，均为字符串类型
+                Toast.makeText(BloodGlucoseActivity.this,DateHelper.timeID(year,month,day),Toast.LENGTH_SHORT).show();
+                timeID = DateHelper.timeID(year,month,day);
+            }
+        };
+        picker = new DatePickerDialog(BloodGlucoseActivity.this, DatePickerListener, year, month, day);
+    }
+    private void initTimeID(){
+        Calendar c = Calendar.getInstance(TimeZone.getTimeZone("GMT+08:00"));    //获取东八区时间
+        int year = c.get(Calendar.YEAR);    //获取年
+        int month = c.get(Calendar.MONTH);   //获取月份，0表示1月份
+        int day = c.get(Calendar.DAY_OF_MONTH);    //获取当前天数
+        timeID_today = DateHelper.timeID(year,month,day);
+        timeID = timeID_today;
     }
     //endregion
     
@@ -79,7 +126,7 @@ public class BloodGlucoseActivity extends AppCompatActivity {
             entries.add(new Entry(i, data));
         }
         //数据处理 - 添加标签
-        LineDataSet dataSet = new LineDataSet(entries, "Label1");
+        LineDataSet dataSet = new LineDataSet(entries, "血糖");
         //数据处理 - 设置每个点之间线的颜色
         dataSet.setColors(Color.BLACK, Color.GRAY, Color.RED, Color.GREEN);
         //数据处理 - 数据显示格式
@@ -87,7 +134,7 @@ public class BloodGlucoseActivity extends AppCompatActivity {
             // LargeValueFormatter:将大数字变为带单位数字；PercentFormatter：将值转换为百分数；StackedValueFormatter，对于BarChart，是否只显示最大值图还是都显示
             @Override
             public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-                return (int)value + "步";
+                return (int)value + "mmol/L";
             }
         });
 
@@ -99,6 +146,19 @@ public class BloodGlucoseActivity extends AppCompatActivity {
     //endregion
     
     //region 响应区
+    //提交数据
+    public void commit(View view){
+        value0 = Integer.parseInt(editText_bloodGlucose_toolbar.getText().toString()) ;
+
+        //向服务器提交记录
+        params_url_commitData = "timeID="+timeID_today+"&value0="+value0;
+
+        httpHelper.setURL_String(url_commitData);
+        httpHelper.setParams(params_url_commitData);
+
+        Log.e("cz","来自 booldglucose commit: params_url_commitData = "+params_url_commitData);
+        new Thread(httpHelper).start();
+    }
     //设置 - 控件 - toolbar 菜单项
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -181,8 +241,8 @@ public class BloodGlucoseActivity extends AppCompatActivity {
                             datas = (JSONArray)JSONObject.get("datas");
                             for (int i = 0; i<datas.length();i++){
                                 JSONObject jobj = (JSONObject) datas.get(i);
-                                int stepCount = (int)jobj.get("stepCount");
-                                list_datas.add(stepCount);
+                                int value0 = (int)jobj.get("value0");
+                                list_datas.add(value0);
                             }
                             if(!(datas.length()<1))
                                 reDrawLineChart();
