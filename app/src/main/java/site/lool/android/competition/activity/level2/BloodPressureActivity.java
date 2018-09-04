@@ -45,7 +45,7 @@ public class BloodPressureActivity extends AppCompatActivity {
     String url_commitData,params_url_commitData;
     String url_datas,params_url_datas;
 
-    int value_low,value_high;
+    float value_low,value_high;
     EditText editText_bloodPressure_low;
     EditText editText_bloodPressure_high;
     BloodPressureActivity.MyHandler myHandler;
@@ -152,13 +152,13 @@ public class BloodPressureActivity extends AppCompatActivity {
             dataSet_low.setValueFormatter(new IValueFormatter() {   // 将值转换为想要显示的形式，比如，某点值为1，变为“1￥”,MP提供了三个默认的转换器，
                 @Override
                 public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-                    return (int)value + "mmHg";
+                    return value + "mmHg";
                 }
             });
             dataSet_high.setValueFormatter(new IValueFormatter() {   // 将值转换为想要显示的形式，比如，某点值为1，变为“1￥”,MP提供了三个默认的转换器，
                 @Override
                 public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-                    return (int)value + "mmHg";
+                    return value + "mmHg";
                 }
             });
             lines.add(dataSet_low);
@@ -174,8 +174,8 @@ public class BloodPressureActivity extends AppCompatActivity {
     //region 响应区
     //提交数据
     public void commit(View view){
-        value_low = Integer.parseInt(editText_bloodPressure_low.getText().toString()) ;
-        value_high = Integer.parseInt(editText_bloodPressure_high.getText().toString()) ;
+        value_low = Float.parseFloat(editText_bloodPressure_low.getText().toString()) ;
+        value_high = Float.parseFloat(editText_bloodPressure_high.getText().toString()) ;
 
         //向服务器提交记录
         params_url_commitData = "timeID="+timeID_today+"&value_low="+value_low+"&value_high="+value_high;
@@ -273,8 +273,8 @@ public class BloodPressureActivity extends AppCompatActivity {
                             datas = (JSONArray)JSONObject.get("datas");
                             for (int i = 0; i<datas.length();i++){
                                 JSONObject jobj = (JSONObject) datas.get(i);
-                                int value_low = (int)jobj.get("value_low");
-                                int value_high = (int)jobj.get("value_high");
+                                float value_low = Float.parseFloat(jobj.get("value_low")+"f");
+                                float value_high = Float.parseFloat(jobj.get("value_high")+"f");
                                 pojoes.add(new BloodPressurePojo(value_low,value_high));
                             }
                             reDrawLineChart(datas.length());

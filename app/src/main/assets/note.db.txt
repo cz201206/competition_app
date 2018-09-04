@@ -76,7 +76,7 @@ CREATE TABLE `loolsite_db`.`blood_glucose` (
 `ID` INT NOT NULL AUTO_INCREMENT ,
 `time_insert` DATE NOT NULL ,
 `time_update` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-`value0` INT NOT NULL ,
+`value0` DOUBLE NOT NULL ,
 `timeID` INT NOT NULL ,
 PRIMARY KEY (`ID`),
 INDEX `index_blood_glucose_timeID` (`timeID`)
@@ -90,8 +90,8 @@ CREATE TABLE `loolsite_db`.`blood_pressure` (
 `ID` INT NOT NULL AUTO_INCREMENT ,
 `time_insert` DATE NOT NULL ,
 `time_update` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-`value_low` INT NOT NULL ,
-`value_high` INT NOT NULL ,
+`value_low` DOUBLE NOT NULL ,
+`value_high` DOUBLE NOT NULL ,
 `timeID` INT NOT NULL ,
 PRIMARY KEY (`ID`),
 INDEX `index_blood_pressure_timeID` (`timeID`)
@@ -108,7 +108,7 @@ CREATE TABLE `loolsite_db`.`weight` (
 `ID` INT NOT NULL AUTO_INCREMENT ,
 `time_insert` DATE NOT NULL ,
 `time_update` TIMESTAMP on update CURRENT_TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-`value0` INT NOT NULL ,
+`value0` DOUBLE NOT NULL ,
 `timeID` INT NOT NULL ,
 PRIMARY KEY (`ID`),
 INDEX `index_weight_timeID` (`timeID`)

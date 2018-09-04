@@ -43,7 +43,7 @@ public class WeightActivity extends AppCompatActivity {
     String url_commitData,params_url_commitData;
     String url_datas,params_url_datas;
 
-    int value0;
+    float value0;
     EditText editText_weight_toolbar;
     WeightActivity.MyHandler myHandler;
     Toolbar toolbar_weight;
@@ -53,7 +53,7 @@ public class WeightActivity extends AppCompatActivity {
     MenuItem item_choose_endTime;
 
     LineChart mLineChart;
-    List<Integer> list_datas;
+    List<Float> list_datas;
     //endregion
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -72,7 +72,7 @@ public class WeightActivity extends AppCompatActivity {
         myHandler =  new WeightActivity.MyHandler();
         editText_weight_toolbar = (EditText)findViewById(R.id.editText_weight_toolbar);
         httpHelper = new HttpHelper(null,null,myHandler);
-        list_datas = new ArrayList<Integer>();
+        list_datas = new ArrayList<Float>();
         mLineChart = (LineChart)findViewById(R.id.lineChart_weight);
         initTimeID();
     }
@@ -124,7 +124,7 @@ public class WeightActivity extends AppCompatActivity {
             //数据处理 - 排序
             List<Entry> entries = new ArrayList<>();
             for (int i = 0; i < list_datas.size(); i++) {
-                int data = list_datas.get(i);
+                float data = list_datas.get(i);
                 entries.add(new Entry(i, data));
             }
             //数据处理 - 添加标签
@@ -136,7 +136,7 @@ public class WeightActivity extends AppCompatActivity {
                 // LargeValueFormatter:将大数字变为带单位数字；PercentFormatter：将值转换为百分数；StackedValueFormatter，对于BarChart，是否只显示最大值图还是都显示
                 @Override
                 public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-                    return (int) value + "斤";
+                    return value + "kg";
                 }
             });
 
@@ -151,7 +151,7 @@ public class WeightActivity extends AppCompatActivity {
     //region 响应区
     //提交数据
     public void commit(View view){
-        value0 = Integer.parseInt(editText_weight_toolbar.getText().toString()) ;
+        value0 = Float.parseFloat(editText_weight_toolbar.getText().toString()) ;
 
         //向服务器提交记录
         params_url_commitData = "timeID="+timeID_today+"&value0="+value0;
@@ -249,7 +249,7 @@ public class WeightActivity extends AppCompatActivity {
                             datas = (JSONArray)JSONObject.get("datas");
                             for (int i = 0; i<datas.length();i++){
                                 JSONObject jobj = (JSONObject) datas.get(i);
-                                int value0 = (int)jobj.get("value0");
+                                float value0 = Float.parseFloat(jobj.get("value0")+"f");
                                 list_datas.add(value0);
                             }
                             reDrawLineChart(datas.length());

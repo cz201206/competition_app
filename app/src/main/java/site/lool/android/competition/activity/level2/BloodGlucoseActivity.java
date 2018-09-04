@@ -45,7 +45,7 @@ public class BloodGlucoseActivity extends AppCompatActivity {
     String url_commitData,params_url_commitData;
     String url_datas,params_url_datas;
 
-    int value0;
+    Float value0;
     EditText editText_bloodGlucose_toolbar;
     BloodGlucoseActivity.MyHandler myHandler;
     Toolbar toolbar_BloodGlucose;
@@ -55,7 +55,7 @@ public class BloodGlucoseActivity extends AppCompatActivity {
     MenuItem item_choose_endTime;
 
     LineChart mLineChart;
-    List<Integer> list_datas;
+    List<Float> list_datas;
     //endregion
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +74,7 @@ public class BloodGlucoseActivity extends AppCompatActivity {
         myHandler =  new MyHandler();
         editText_bloodGlucose_toolbar = (EditText)findViewById(R.id.editText_bloodGlucose_toolbar);
         httpHelper = new HttpHelper(null,null,myHandler);
-        list_datas = new ArrayList<Integer>();
+        list_datas = new ArrayList<Float>();
         mLineChart = (LineChart)findViewById(R.id.lineChart_BloodGlucose);
         initTimeID();
     }
@@ -126,7 +126,7 @@ public class BloodGlucoseActivity extends AppCompatActivity {
             //数据处理 - 排序
             List<Entry> entries = new ArrayList<>();
             for (int i = 0; i < list_datas.size(); i++) {
-                int data = list_datas.get(i);
+                float data = list_datas.get(i);
                 entries.add(new Entry(i, data));
             }
             //数据处理 - 添加标签
@@ -138,7 +138,7 @@ public class BloodGlucoseActivity extends AppCompatActivity {
                 // LargeValueFormatter:将大数字变为带单位数字；PercentFormatter：将值转换为百分数；StackedValueFormatter，对于BarChart，是否只显示最大值图还是都显示
                 @Override
                 public String getFormattedValue(float value, Entry entry, int dataSetIndex, ViewPortHandler viewPortHandler) {
-                    return (int) value + "mmol/L";
+                    return  value + "mmol/L";
                 }
             });
 
@@ -153,7 +153,7 @@ public class BloodGlucoseActivity extends AppCompatActivity {
     //region 响应区
     //提交数据
     public void commit(View view){
-        value0 = Integer.parseInt(editText_bloodGlucose_toolbar.getText().toString()) ;
+        value0 = Float.parseFloat(editText_bloodGlucose_toolbar.getText().toString()) ;
 
         //向服务器提交记录
         params_url_commitData = "timeID="+timeID_today+"&value0="+value0;
@@ -251,7 +251,7 @@ public class BloodGlucoseActivity extends AppCompatActivity {
                             datas = (JSONArray)JSONObject.get("datas");
                             for (int i = 0; i<datas.length();i++){
                                 JSONObject jobj = (JSONObject) datas.get(i);
-                                int value0 = (int)jobj.get("value0");
+                                float value0 = Float.parseFloat(jobj.get("value0")+"f");
                                 list_datas.add(value0);
                             }
                             reDrawLineChart(datas.length());
